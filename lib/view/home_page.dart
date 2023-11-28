@@ -14,11 +14,12 @@ class HomePage extends StatelessWidget {
       await prefs.remove('userUID');
 
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          // Add dark mode toggle logic here if needed
-        },
-      )));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => LoginViewWithDarkModeSwitch(
+                onDarkModeChanged: (value) {
+                  // Add dark mode toggle logic here if needed
+                },
+              )));
     } catch (error) {
       print(error.toString());
     }
@@ -48,7 +49,18 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 20.0),
-
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/viewworkout');
+              },
+              child: Text('View Workouts'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/viewexercises');
+              },
+              child: Text('View all exercises'),
+            ),
           ],
         ),
       ),

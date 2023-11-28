@@ -13,31 +13,9 @@ Future<String> generateWorkoutPlan(Map<String, String> userAnswers) async {
   final String input =
       prompt + questions.join('\n') + '\n\nAnswers:\n' + answers.join('\n');
 
-  final Uri uri =
-      Uri.parse('https://api.openai.com/v1/engines/davinci-codex/completions');
+  print('Input:\n$input');
 
-  final http.Response response = await http.post(
-    uri,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $apiKey',
-    },
-    body: jsonEncode({
-      'prompt': input,
-      'temperature': 0.7, // You can adjust the temperature for creativity
-      'max_tokens':
-          100, // You can adjust the maximum number of tokens in the response
-      'stop': '\n', // Stop generating after a newline character
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = jsonDecode(response.body);
-    final String generatedText = data['choices'][0]['text'];
-    return generatedText;
-  } else {
-    throw Exception('Failed to generate workout plan');
-  }
+  return "Workout Plan"; // Replace with the generated workout plan
 }
 
 class PersonalizedPlanQuestionnairePage extends StatefulWidget {
