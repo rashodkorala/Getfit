@@ -1,34 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserProfile {
-  final String uid;
-  final String displayName;
-  final String email;
-  final String gender;
-  final int age;
-  final double weight;
-  final double height;
-  final String activityLevel;
-  final double tdee;
-  final double bmi;
-  final String profilePictureUrl;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? uid;
+  final String? displayName;
+  final String? email;
+  final String? gender;
+  final int? age;
+  final double? weight;
+  final double? height;
+  final String? activityLevel;
+  final double? tdee;
+  final double? bmi;
+  final String? profilePictureUrl;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   UserProfile({
-    required this.uid,
-    required this.displayName,
-    required this.email,
-    required this.gender,
-    required this.age,
-    required this.weight,
-    required this.height,
-    required this.activityLevel,
-    required this.tdee,
-    required this.bmi,
-    required this.profilePictureUrl,
-    required this.createdAt,
-    required this.updatedAt,
+    this.uid,
+    this.displayName,
+    this.email,
+    this.gender,
+    this.age,
+    this.weight,
+    this.height,
+    this.activityLevel,
+    this.tdee,
+    this.bmi,
+    this.profilePictureUrl,
+    this.createdAt,
+    this.updatedAt,
   });
 
   Future<void> saveUserProfile(UserProfile userProfile) async {
@@ -61,24 +61,27 @@ class UserProfile {
           .collection('UserProfiles')
           .doc(uid)
           .get();
+
       if (doc.exists) {
+        // Fetch the document data and create a UserProfile object
         return UserProfile(
           uid: uid,
-          displayName: doc['displayName'],
-          email: doc['email'],
-          gender: doc['gender'],
-          age: doc['age'],
-          weight: doc['weight'],
-          height: doc['height'],
-          activityLevel: doc['activityLevel'],
-          tdee: doc['tdee'],
-          bmi: doc['bmi'],
-          profilePictureUrl: doc['profilePictureUrl'],
-          createdAt: doc['createdAt'].toDate(),
-          updatedAt: doc['updatedAt'].toDate(),
+          displayName: doc['displayName'] ?? 'No Name',
+          email: doc['email'] ?? 'No Email',
+          gender: doc['gender'] ?? 'No Gender',
+          age: doc['age'] ?? 0,
+          weight: doc['weight']?.toDouble() ?? 0.0,
+          height: doc['height']?.toDouble() ?? 0.0,
+          activityLevel: doc['activityLevel'] ?? 'No Activity Level',
+          tdee: doc['tdee']?.toDouble() ?? 0.0,
+          bmi: doc['bmi']?.toDouble() ?? 0.0,
+          profilePictureUrl: doc['profilePictureUrl'] ?? 'No Profile Picture',
+          createdAt: doc['createdAt']?.toDate() ?? DateTime.now(),
+          updatedAt: doc['updatedAt']?.toDate() ?? DateTime.now(),
         );
       } else {
-        return null; // Handle if the profile doesn't exist
+        // Handle if the profile doesn't exist
+        return null;
       }
     } catch (e) {
       print('Error fetching profile: $e');

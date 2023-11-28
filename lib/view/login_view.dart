@@ -1,27 +1,43 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:getfit/view/home_page.dart';
+import 'package:getfit/model/user_profile_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'home_page.dart';
 
 class LoginView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void signIn(BuildContext context) async {
+  Future<void> signIn(BuildContext context) async {
     try {
+      print('signed in');
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
       final User? currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(currentUser: currentUser)),
-        );
+        UserProfile? userProfile = await UserProfile().getUserProfile(currentUser.uid);
+        if (userProfile != null) {
+          await saveUserCredentials(currentUser.uid);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(currentUser: currentUser, userProfile: userProfile)),
+          );
+        } else {
+          // Handle when the user profile doesn't exist
+        }
       }
     } catch (error) {
       print(error.toString());
     }
+  }
+
+  Future<void> saveUserCredentials(String userUID) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userUID', userUID);
   }
 
   @override
@@ -76,6 +92,37 @@ class LoginView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LoginViewWithDarkModeSwitch extends StatelessWidget {
+  final ValueChanged<bool> onDarkModeChanged;
+
+  const LoginViewWithDarkModeSwitch({
+    required this.onDarkModeChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+        actions: [
+          Row(
+            children: [
+              Text('Dark Mode'),
+              Switch(
+                value: Theme.of(context).brightness == Brightness.dark,
+                onChanged: (value) {
+                  onDarkModeChanged(value);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: LoginView(),
     );
   }
 }

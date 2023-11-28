@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class HomePage extends StatelessWidget {
   final User? currentUser;
 
+
   const HomePage({Key? key, required this.currentUser}) : super(key: key);
 
   Future<void> signOut(BuildContext context) async {
