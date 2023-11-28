@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: isLoggedIn
-          ? HomePage(currentUser: currentUser!, userProfile: userProfile!)
+          ? HomePage(currentUser: currentUser!)
           : LoginViewWithDarkModeSwitch(
         onDarkModeChanged: (value) {
           _isDarkMode = value;

@@ -19,16 +19,11 @@ class LoginView extends StatelessWidget {
       );
       final User? currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        UserProfile? userProfile = await UserProfile().getUserProfile(currentUser.uid);
-        if (userProfile != null) {
-          await saveUserCredentials(currentUser.uid);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage(currentUser: currentUser, userProfile: userProfile)),
-          );
-        } else {
-          // Handle when the user profile doesn't exist
-        }
+        await saveUserCredentials(currentUser.uid);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(currentUser: currentUser)),
+        );
       }
     } catch (error) {
       print(error.toString());
