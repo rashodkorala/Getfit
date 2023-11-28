@@ -1,6 +1,44 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<String> generateWorkoutPlan(Map<String, String> userAnswers) async {
+  final String apiKey =
+      "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"; // Replace with your OpenAI API key
+
+  final String prompt =
+      "Generate a personalized workout plan based on the user's answers:\n\n";
+  final List<String> questions = userAnswers.keys.toList();
+  final List<String> answers = userAnswers.values.toList();
+  final String input =
+      prompt + questions.join('\n') + '\n\nAnswers:\n' + answers.join('\n');
+
+  final Uri uri =
+      Uri.parse('https://api.openai.com/v1/engines/davinci-codex/completions');
+
+  final http.Response response = await http.post(
+    uri,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    },
+    body: jsonEncode({
+      'prompt': input,
+      'temperature': 0.7, // You can adjust the temperature for creativity
+      'max_tokens':
+          100, // You can adjust the maximum number of tokens in the response
+      'stop': '\n', // Stop generating after a newline character
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    final String generatedText = data['choices'][0]['text'];
+    return generatedText;
+  } else {
+    throw Exception('Failed to generate workout plan');
+  }
+}
 
 class PersonalizedPlanQuestionnairePage extends StatefulWidget {
   @override
@@ -10,14 +48,23 @@ class PersonalizedPlanQuestionnairePage extends StatefulWidget {
 
 class _PersonalizedPlanQuestionnairePageState
     extends State<PersonalizedPlanQuestionnairePage> {
-  // You can use TextEditingController or other form controllers for handling user input
-  TextEditingController question1Controller = TextEditingController();
-  TextEditingController question2Controller = TextEditingController();
-  TextEditingController question3Controller = TextEditingController();
-  TextEditingController question4Controller = TextEditingController();
-  TextEditingController question5Controller = TextEditingController();
-  TextEditingController question6Controller = TextEditingController();
-  TextEditingController question7Controller = TextEditingController();
+  int currentStep = 0;
+  List<TextEditingController> questionControllers = List.generate(
+    7,
+    (index) => TextEditingController(),
+  );
+
+  List<String> questions = [
+    'What is your age?',
+    'What is your height?',
+    'What is your weight?',
+    'What is your goal?',
+    'Do you have any injuries (current or previous)?',
+    'How often do you exercise?',
+    'What do you want to focus on or improve?',
+  ];
+
+  bool isLoading = false; // Variable to track loading state
 
   @override
   Widget build(BuildContext context) {
@@ -25,48 +72,137 @@ class _PersonalizedPlanQuestionnairePageState
       appBar: AppBar(
         title: const Text('Personalized Plan Questionnaire'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Question 1:'),
-            TextFormField(
-              controller: question1Controller,
-              decoration: InputDecoration(
-                hintText: 'Enter your answer',
-              ),
-            ),
-            SizedBox(height: 16),
-            Text('Question 2:'),
-            TextFormField(
-              controller: question2Controller,
-              decoration: InputDecoration(
-                hintText: 'Enter your answer',
-              ),
-            ),
-            // Repeat the pattern for the remaining questions...
+      body: isLoading
+          ? _buildLoadingScreen()
+          : Stepper(
+              type: StepperType.vertical,
+              currentStep: currentStep,
+              onStepContinue: () async {
+                // Validate the current step before proceeding to the next one
+                if (validateCurrentStep()) {
+                  // Save the current answer and move to the next step
+                  saveAnswer();
+                  setState(() {
+                    if (currentStep < questions.length - 1) {
+                      currentStep += 1;
+                    } else {
+                      // If all questions are answered, show loading screen
+                      isLoading = true;
+                    }
+                  });
 
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Process the user's answers
-                // You can replace this with your logic to generate a personalized plan
-                processUserAnswers();
+                  // Simulate loading for 2 seconds
+                  await Future.delayed(Duration(seconds: 2));
+
+                  // Process user answers and generate personalized plan
+                  processUserAnswers();
+                }
               },
-              child: const Text('Submit'),
+              onStepCancel: () {
+                // Move to the previous step
+                setState(() {
+                  if (currentStep > 0) {
+                    currentStep -= 1;
+                  }
+                });
+              },
+              steps: List.generate(
+                questions.length,
+                (index) => Step(
+                  title: Text('Question ${index + 1}'),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(questions[index]),
+                      TextFormField(
+                        controller: questionControllers[index],
+                        keyboardType: index == 0 || index == 1 || index == 2
+                            ? TextInputType.number
+                            : TextInputType.text,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your answer',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
-  void processUserAnswers() {
-    // Add your logic to process the user's answers and generate a personalized plan
-    // For example, you can access the user's answers using the controllers
-    String answer1 = question1Controller.text;
-    String answer2 = question2Controller.text;
+  Widget _buildLoadingScreen() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  bool validateCurrentStep() {
+    // Validate the current step before proceeding to the next one
+    if (currentStep == 0 || currentStep == 1 || currentStep == 2) {
+      // Validate age, height, and weight
+      return validateNumber(questionControllers[currentStep].text);
+    }
+    return true; // No validation for other questions
+  }
+
+  bool validateNumber(String? value) {
+    // Validate if the input is a number
+    if (value == null || value.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('This field is required'),
+        ),
+      );
+      return false;
+    }
+    if (double.tryParse(value) == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid number'),
+        ),
+      );
+      return false;
+    }
+    // Additional validation based on the question
+    if (questions[currentStep].contains('weight') && double.parse(value) <= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Weight should be above 5'),
+        ),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  void saveAnswer() {
+    // Save the current answer
+    String answer = questionControllers[currentStep].text;
+    print('Question ${currentStep + 1}: $answer');
+  }
+
+  void processUserAnswers() async {
     // Process the answers and generate the personalized plan...
+    Map<String, String> userAnswers = {};
+
+    for (int i = 0; i < questionControllers.length; i++) {
+      String question = questions[i];
+      String answer = questionControllers[i].text;
+      userAnswers[question] = answer;
+    }
+
+    // Generate workout plan using ChatGPT
+    try {
+      String workoutPlan = await generateWorkoutPlan(userAnswers);
+      print('Generated Workout Plan:\n$workoutPlan');
+    } catch (e) {
+      print('Error generating workout plan: $e');
+    }
+
+    // Simulate stopping the loading state
+    setState(() {
+      isLoading = false;
+    });
   }
 }

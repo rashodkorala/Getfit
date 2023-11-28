@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/view/WorkoutListView.dart';
 
+import 'view/PersonalizedPlanQuestionnairePage.dart';
+
 void main() {
   runApp(const MainApp());
 }
@@ -14,7 +16,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'GetFit',
-      home: WorkoutListView(),
+      home: PersonalizedPlanQuestionnairePage(),
     );
   }
 }
