@@ -12,6 +12,7 @@ dependencies:
   firebase_ui_auth: ^1.10.0
   flutter:
     sdk: flutter
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

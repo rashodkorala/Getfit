@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_view.dart';
 
 class HomePage extends StatelessWidget {
   final User? currentUser;
@@ -8,8 +10,15 @@ class HomePage extends StatelessWidget {
 
   Future<void> signOut(BuildContext context) async {
     try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('userUID');
+
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).popAndPushNamed('/');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginViewWithDarkModeSwitch(
+        onDarkModeChanged: (value) {
+          // Add dark mode toggle logic here if needed
+        },
+      )));
     } catch (error) {
       print(error.toString());
     }
