@@ -39,7 +39,20 @@ class _CreateIndividualWorkoutPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Individual Workout Plan'),
+        title: const Text('Create Workout Plan'),
+        //add a button to the app bar to save the workout with text save and a icon
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Perform the action to save the selected exercises
+              _saveSelectedExercises();
+            },
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,65 +66,18 @@ class _CreateIndividualWorkoutPageState
                 hintText: 'Enter workout plan name',
               ),
             ),
-            SizedBox(height: 16),
-            Text('Available Exercises:'),
-            _buildAvailableExercisesList(),
-            SizedBox(height: 16),
+            const SizedBox(height: 16.0),
             Text('Selected Exercises:'),
-            _buildSelectedExercisesList(),
-            SizedBox(height: 16),
+            _showSelectedExercises(),
             ElevatedButton(
               onPressed: () {
                 // Perform the action to save the selected exercises
-                _saveSelectedExercises();
+                _addExercise();
               },
-              child: const Text('Save'),
+              child: const Text('add exercise'),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildAvailableExercisesList() {
-    return Container(
-      height: 200,
-      child: ListView.builder(
-        itemCount: availableExercises.length,
-        itemBuilder: (context, index) {
-          Exercise exercise = availableExercises[index];
-          return ListTile(
-            title: Text(exercise.name),
-            onTap: () {
-              setState(() {
-                selectedExercises.add(exercise);
-              });
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSelectedExercisesList() {
-    return Container(
-      height: 100,
-      child: ListView.builder(
-        itemCount: selectedExercises.length,
-        itemBuilder: (context, index) {
-          Exercise exercise = selectedExercises[index];
-          return ListTile(
-            title: Text(exercise.name),
-            trailing: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                setState(() {
-                  selectedExercises.removeAt(index);
-                });
-              },
-            ),
-          );
-        },
       ),
     );
   }
@@ -153,6 +119,65 @@ class _CreateIndividualWorkoutPageState
     } catch (e) {
       // Handle errors (e.g., show an error message)
       print('Error saving workout: $e');
+    }
+  }
+
+  void _addExercise() {
+    // Show a dialog with a list of available exercises
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select an exercise'),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: ListView.builder(
+              itemCount: availableExercises.length,
+              itemBuilder: (BuildContext context, int index) {
+                Exercise exercise = availableExercises[index];
+                return ListTile(
+                  title: Text(exercise.name),
+                  onTap: () {
+                    // Add the selected exercise to the list of selected exercises
+                    setState(() {
+                      selectedExercises.add(exercise);
+                    });
+                    // Close the dialog
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _showSelectedExercises() {
+    if (selectedExercises.isNotEmpty) {
+      return SizedBox(
+        width: double.maxFinite,
+        height: 300,
+        child: ListView.builder(
+          itemCount: selectedExercises.length,
+          itemBuilder: (BuildContext context, int index) {
+            Exercise exercise = selectedExercises[index];
+            return ListTile(
+              title: Text(exercise.name),
+              onTap: () {
+                // Remove the selected exercise from the list of selected exercises
+                setState(() {
+                  selectedExercises.remove(exercise);
+                });
+              },
+            );
+          },
+        ),
+      );
+    } else {
+      return const Text('No exercises selected');
     }
   }
 }
