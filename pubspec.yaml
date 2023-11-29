@@ -13,6 +13,7 @@ dependencies:
   firebase_ui_auth: ^1.10.0
   flutter:
     sdk: flutter
+  image_picker: ^1.0.4
   shared_preferences: ^2.2.2
 
 dev_dependencies:

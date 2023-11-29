@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:getfit/view/home_page.dart';
+import 'package:getfit/view/settings_view.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class SettingsPage extends StatefulWidget {
   final User? currentUser;
@@ -14,17 +17,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  //TextEditingController genderController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   TextEditingController heightController = TextEditingController();
   String selectedActivityLevel = 'Sedentary'; // Default value for dropdown
   String selectedGender = 'Male'; // Default value for gender dropdown
+  TextEditingController bmiController = TextEditingController();
+  TextEditingController tdeeController = TextEditingController();
+  File? selectedProfilePicture;
+  TextEditingController descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchProfileData();
+    loadImagePathFromLocal();
   }
 
   Future<void> fetchProfileData() async {
@@ -35,21 +43,63 @@ class _SettingsPageState extends State<SettingsPage> {
     if (snapshot.exists) {
       setState(() {
         //genderController.text = snapshot.data()?['gender'] ?? '';
+        nameController.text = snapshot.data()?['name']?.toString() ?? '';
         ageController.text = snapshot.data()?['age']?.toString() ?? '';
         weightController.text = snapshot.data()?['weight']?.toString() ?? '';
         heightController.text = snapshot.data()?['height']?.toString() ?? '';
         selectedActivityLevel = snapshot.data()?['activityLevel'] ?? 'Sedentary';
         selectedGender = snapshot.data()?['gender'] ?? 'Male';
+        bmiController.text = snapshot.data()?['bmi'] ?? '';
+        tdeeController.text = snapshot.data()?['tdee'] ?? '';
+        selectedProfilePicture = File(snapshot.data()?['profilePicture'] ?? '');
+        descriptionController.text = snapshot.data()?['description'] ?? '';
+
+      });
+    }
+  }
+
+  Future<void> _getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        selectedProfilePicture = File(pickedFile.path);
+        saveImagePathToLocal(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> saveImagePathToLocal(String imagePath) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('profilePicturePath', imagePath);
+  }
+
+  Future<void> loadImagePathFromLocal() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? imagePath = prefs.getString('profilePicturePath');
+    if (imagePath != null) {
+      setState(() {
+        selectedProfilePicture = File(imagePath);
       });
     }
   }
 
   Future<void> updateProfile() async {
+    String name = nameController.text;
     String gender = selectedGender;
     int age = int.tryParse(ageController.text) ?? 0;
     double weight = double.tryParse(weightController.text) ?? 0.0;
     double height = double.tryParse(heightController.text) ?? 0.0;
     String activityLevel = selectedActivityLevel;
+    double bmi = calculateBMI(weight, height);
+    double tdee = calculateTDEE(weight, height, age, gender, activityLevel);
+    String profilePicture = selectedProfilePicture != null
+      ? 'assets/default_profile_image.png'
+      : '';
+    String description = descriptionController.text;
+
+
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -57,24 +107,30 @@ class _SettingsPageState extends State<SettingsPage> {
       CollectionReference profiles = firestore.collection('profiles');
 
       await profiles.doc(widget.currentUser?.uid).set({
+        'name': name,
         'gender': gender,
         'age': age,
         'weight': weight,
         'height': height,
         'activityLevel': activityLevel,
+        'bmi': bmi,
+        'tdee': tdee,
+        'profilePicture': profilePicture,
+        'description': description,
       }, SetOptions(merge: true));
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('profileCompleted', true);
 
-      Navigator.pop(context);
+      Navigator.pop(context, selectedProfilePicture);
     } catch (e) {
       print('Error updating profile data: $e');
     }
   }
 
   double calculateBMI(double weight, double height) {
-    return weight / ((height / 100) * (height / 100));
+    double bmi = weight / ((height / 100) * (height / 100));
+    return double.parse(bmi.toStringAsFixed(2));
   }
 
   double calculateTDEE(double weight, double height, int age, String gender, String activitylevel) {
@@ -112,6 +168,79 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            GestureDetector(
+              onTap: () {
+                _getImage();
+              },
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2.0,
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: selectedProfilePicture != null
+                          ? ClipOval(
+                        child: Container(
+                          width: 110,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image.file(
+                            selectedProfilePicture!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                          : Icon(
+                        Icons.account_circle,
+                        size: 120,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 130,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _getImage();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            TextFormField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                  labelText: 'Bio',
+                  hintText: 'Write a short bio...',
+                border: OutlineInputBorder(),
+              ),
+                keyboardType: TextInputType.text,
+                maxLines: 1,
+            ),
+            TextFormField(
+              controller: nameController,
+              decoration: InputDecoration(labelText: 'User Name'),
+              keyboardType: TextInputType.text,
+            ),
             DropdownButton<String>(
               value: selectedGender,
               items: [
