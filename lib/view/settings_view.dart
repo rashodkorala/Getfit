@@ -14,45 +14,38 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late TextEditingController genderController;
-  late TextEditingController ageController;
-  late TextEditingController weightController;
-  late TextEditingController heightController;
-  late String selectedActivityLevel;
+  //TextEditingController genderController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  String selectedActivityLevel = 'Sedentary'; // Default value for dropdown
+  String selectedGender = 'Male'; // Default value for gender dropdown
 
   @override
   void initState() {
     super.initState();
-    genderController = TextEditingController();
-    ageController = TextEditingController();
-    weightController = TextEditingController();
-    heightController = TextEditingController();
-    selectedActivityLevel = 'Low';
-
-    // Fetch profile data and set the text controllers
-    fetchUserProfile();
+    fetchProfileData();
   }
 
-  Future<void> fetchUserProfile() async {
+  Future<void> fetchProfileData() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     DocumentSnapshot<Map<String, dynamic>> snapshot =
     await firestore.collection('profiles').doc(widget.currentUser?.uid).get();
 
     if (snapshot.exists) {
-      Map<String, dynamic>? userProfile = snapshot.data();
       setState(() {
-        genderController.text = userProfile?['gender'] ?? '';
-        ageController.text = userProfile?['age']?.toString() ?? '';
-        weightController.text = userProfile?['weight']?.toString() ?? '';
-        heightController.text = userProfile?['height']?.toString() ?? '';
-        selectedActivityLevel = userProfile?['activityLevel'] ?? 'Low';
+        //genderController.text = snapshot.data()?['gender'] ?? '';
+        ageController.text = snapshot.data()?['age']?.toString() ?? '';
+        weightController.text = snapshot.data()?['weight']?.toString() ?? '';
+        heightController.text = snapshot.data()?['height']?.toString() ?? '';
+        selectedActivityLevel = snapshot.data()?['activityLevel'] ?? 'Sedentary';
+        selectedGender = snapshot.data()?['gender'] ?? 'Male';
       });
     }
   }
 
   Future<void> updateProfile() async {
-    // Retrieve entered data
-    String gender = genderController.text;
+    String gender = selectedGender;
     int age = int.tryParse(ageController.text) ?? 0;
     double weight = double.tryParse(weightController.text) ?? 0.0;
     double height = double.tryParse(heightController.text) ?? 0.0;
@@ -74,21 +67,38 @@ class _SettingsPageState extends State<SettingsPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('profileCompleted', true);
 
-      // Navigate back to the home page or profile page after updating
       Navigator.pop(context);
     } catch (e) {
       print('Error updating profile data: $e');
     }
   }
 
-  @override
-  void dispose() {
-    // Dispose the controllers
-    genderController.dispose();
-    ageController.dispose();
-    weightController.dispose();
-    heightController.dispose();
-    super.dispose();
+  double calculateBMI(double weight, double height) {
+    return weight / ((height / 100) * (height / 100));
+  }
+
+  double calculateTDEE(double weight, double height, int age, String gender, String activitylevel) {
+    double bmr;
+    if (gender == 'Male') {
+      bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+    } else {
+      bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+    }
+
+    switch (activitylevel) {
+      case 'Sedentary':
+        return bmr * 1.2;
+      case 'Lightly active':
+        return bmr * 1.375;
+      case 'Moderately active':
+        return bmr * 1.55;
+      case 'Very active':
+        return bmr * 1.725;
+      case 'Super active':
+        return bmr * 1.9;
+      default:
+        return bmr;
+    }
   }
 
   @override
@@ -102,9 +112,27 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextFormField(
-              controller: genderController,
-              decoration: InputDecoration(labelText: 'Gender'),
+            DropdownButton<String>(
+              value: selectedGender,
+              items: [
+                DropdownMenuItem<String>(
+                  value: 'Male',
+                  child: Text('Male'),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'Female',
+                  child: Text('Female'),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'Other',
+                  child: Text('Other'),
+                ),
+              ],
+              onChanged: (newValue) {
+                setState(() {
+                  selectedGender = newValue!;
+                });
+              },
             ),
             TextFormField(
               controller: ageController,
@@ -125,16 +153,24 @@ class _SettingsPageState extends State<SettingsPage> {
               value: selectedActivityLevel,
               items: [
                 DropdownMenuItem<String>(
-                  value: 'Low',
-                  child: Text('Low'),
+                  value: 'Sedentary',
+                  child: Text('Sedentary'),
                 ),
                 DropdownMenuItem<String>(
-                  value: 'Moderate',
-                  child: Text('Moderate'),
+                  value: 'Lightly Active',
+                  child: Text('Lightly Active'),
                 ),
                 DropdownMenuItem<String>(
-                  value: 'High',
-                  child: Text('High'),
+                  value: 'Moderately Active',
+                  child: Text('Moderately Active'),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'Very active',
+                  child: Text('Very active'),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'Super active',
+                  child: Text('Super active'),
                 ),
               ],
               onChanged: (newValue) {
