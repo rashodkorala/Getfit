@@ -1,51 +1,54 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/exerciesService.dart';
 
 import '../model/Exerice_model.dart';
 
 class CreateExercisePage extends StatefulWidget {
+  const CreateExercisePage({super.key});
+
   @override
   _CreateExercisePageState createState() => _CreateExercisePageState();
 }
 
 class _CreateExercisePageState extends State<CreateExercisePage> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
-  ExcersiceService _exerciseService = ExcersiceService();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final ExcersiceService _exerciseService = ExcersiceService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Exercise'),
+        title: const Text('Create Exercise'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Exercise Name'),
+            const Text('Exercise Name'),
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Enter exercise name',
               ),
             ),
-            SizedBox(height: 16),
-            Text('Exercise Description'),
+            const SizedBox(height: 16),
+            const Text('Exercise Description'),
             TextFormField(
               controller: _descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Enter exercise description',
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 saveExercise();
               },
-              child: Text('Save Exercise'),
+              child: const Text('Save Exercise'),
             ),
           ],
         ),
