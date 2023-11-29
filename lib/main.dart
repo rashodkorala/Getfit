@@ -60,8 +60,6 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/signup': (context) => SignUpView(),
         '/forgotpassword': (context) => ForgotPasswordView(),
-        '/personalized-plan-questionnaire': (context) =>
-            PersonalizedPlanQuestionnairePage(),
         '/viewworkout': (context) => WorkoutListView(),
         '/viewexercises': (context) => ExercisesPage(),
       },

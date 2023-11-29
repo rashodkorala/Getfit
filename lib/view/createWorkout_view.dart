@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'createIndiviualWorkouts_view.dart';
-import 'createPersonalizedWorkout_view.dart';
 import 'prebuiltWorkoutplans_view.dart';
 
 class CreateWorkoutPlanPage extends StatelessWidget {
@@ -33,12 +32,12 @@ class CreateWorkoutPlanPage extends StatelessWidget {
               onPressed: () {
                 // Logic to generate a personalized plan
                 // You can replace this with your actual logic
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreatePersonalizedWorkPlan(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => const CreatePersonalizedWorkPlan(),
+                //   ),
+                // );
               },
               child: const Text('Generate a Personalized Plan'),
             ),
