@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controller/exerciesService.dart';
 import '../controller/workoutService.dart';
-import '../model/Exerice_model.dart';
+import '../model/exercise_model.dart';
 import '../model/workout_model.dart';
 
 class CreateIndividualWorkoutPage extends StatefulWidget {

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/exerciesService.dart';
 
-import '../model/Exerice_model.dart';
+import '../model/exercise_model.dart';
 
 class CreateExercisePage extends StatefulWidget {
   const CreateExercisePage({super.key});

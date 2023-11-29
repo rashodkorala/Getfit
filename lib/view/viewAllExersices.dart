@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../controller/exerciesService.dart';
-import '../model/Exerice_model.dart';
+import '../model/exercise_model.dart';
 import 'createExercise_view.dart';
 
 class ExercisesPage extends StatefulWidget {

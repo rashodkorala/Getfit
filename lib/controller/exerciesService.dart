@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../model/Exerice_model.dart';
+import '../model/exercise_model.dart';
 
 class ExcersiceService {
   final CollectionReference _exercisesCollection =

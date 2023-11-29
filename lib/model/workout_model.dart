@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'Exerice_model.dart';
+import 'exercise_model.dart';
 
 class Workout {
   String name;
