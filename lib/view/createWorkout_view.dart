@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'createIndiviualWorkouts_view.dart';
 import 'createPersonalizedWorkout_view.dart';
+import 'prebuiltWorkoutplans_view.dart';
 
 class CreateWorkoutPlanPage extends StatelessWidget {
   @override
@@ -56,38 +58,6 @@ class CreateWorkoutPlanPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class CreateIndividualWorkoutPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Individual Workout Plan'),
-      ),
-      body: Center(
-        child:
-            const Text('Your individual workout plan creation form goes here.'),
-        // Add form fields, buttons, and logic for creating individual workout plans
-      ),
-    );
-  }
-}
-
-class ChoosePrebuiltWorkoutPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Choose Prebuilt Workout Plan'),
-      ),
-      body: Center(
-        child: const Text(
-            'Your page to choose a prebuilt workout plan goes here.'),
-        // Add UI elements and logic for choosing a prebuilt workout plan
       ),
     );
   }
