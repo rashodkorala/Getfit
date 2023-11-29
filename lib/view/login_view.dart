@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:getfit/model/user_profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_page.dart';
 
@@ -12,7 +9,6 @@ class LoginView extends StatelessWidget {
 
   Future<void> signIn(BuildContext context) async {
     try {
-      print('signed in');
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
@@ -121,3 +117,5 @@ class LoginViewWithDarkModeSwitch extends StatelessWidget {
     );
   }
 }
+
+

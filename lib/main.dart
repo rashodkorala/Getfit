@@ -7,7 +7,6 @@ import 'view/sign_up_view.dart';
 import 'view/forgot_password_view.dart';
 import 'view/home_page.dart';
 import 'package:getfit/firebase_options.dart';
-import 'package:getfit/model/user_profile_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,27 +18,23 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userUID = prefs.getString('userUID');
 
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  UserProfile? userProfile;
-
-  if (userUID != null && userUID.isNotEmpty) {
-    userProfile = await UserProfile().getUserProfile(userUID);
-  }
-
-  runApp(MyApp(isLoggedIn: userUID != null && userUID.isNotEmpty, currentUser: currentUser, userProfile: userProfile));
+  runApp(MyApp(isLoggedIn: userUID != null && userUID.isNotEmpty));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool isLoggedIn;
-  final User? currentUser;
-  final UserProfile? userProfile;
 
-  const MyApp({Key? key, required this.isLoggedIn, this.currentUser, this.userProfile}) : super(key: key);
+  const MyApp({Key? key, required this.isLoggedIn}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
-    bool _isDarkMode = false;
-
     return MaterialApp(
       title: 'Get Fit',
       theme: ThemeData(
@@ -47,11 +42,13 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: isLoggedIn
-          ? HomePage(currentUser: currentUser!)
+      home: widget.isLoggedIn
+          ? HomePage(currentUser: FirebaseAuth.instance.currentUser)
           : LoginViewWithDarkModeSwitch(
         onDarkModeChanged: (value) {
-          _isDarkMode = value;
+          setState(() {
+            _isDarkMode = value;
+          });
         },
       ),
       routes: {
@@ -61,4 +58,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
