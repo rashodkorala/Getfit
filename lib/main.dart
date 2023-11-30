@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getfit/view/WorkoutListView.dart';
+import 'package:getfit/view/prebuiltWorkoutplans_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'view/login_view.dart';
 import 'view/sign_up_view.dart';
@@ -61,6 +62,7 @@ class _MyAppState extends State<MyApp> {
         '/forgotpassword': (context) => ForgotPasswordView(),
         '/viewworkout': (context) => WorkoutListView(),
         '/viewexercises': (context) => ExercisesPage(),
+        '/prebuiltworkout': (context) => ChoosePrebuiltWorkoutPage(),
       },
     );
   }

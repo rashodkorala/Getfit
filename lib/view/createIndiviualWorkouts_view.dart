@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
 import '../controller/exerciesService.dart';
 import '../controller/workoutService.dart';
@@ -6,6 +7,9 @@ import '../model/exercise_model.dart';
 import '../model/workout_model.dart';
 
 class CreateIndividualWorkoutPage extends StatefulWidget {
+  String from = '';
+
+  CreateIndividualWorkoutPage({required this.from, Workout? workout});
   @override
   _CreateIndividualWorkoutPageState createState() =>
       _CreateIndividualWorkoutPageState();
@@ -15,6 +19,9 @@ class _CreateIndividualWorkoutPageState
     extends State<CreateIndividualWorkoutPage> {
   final ExcersiceService _excersiceService = ExcersiceService();
   final WorkoutService _workoutService = WorkoutService();
+  final prebuiltWorkoutService _prebuiltWorkoutService =
+      prebuiltWorkoutService();
+
   List<Exercise> availableExercises = [];
   List<workoutExercise> selectedExercises = [];
   TextEditingController workoutNameController = TextEditingController();
@@ -95,17 +102,23 @@ class _CreateIndividualWorkoutPageState
           );
           print(workout.toMap());
           // Save the workout to Firestore using the WorkoutService
-          await _workoutService.addWorkout(workout);
-
-          // After saving, you might want to navigate to a different page or show a confirmation
-          //show a confirmation
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Workout saved successfully!'),
-            ),
-          );
-          // navigate to show all workouts
-          Navigator.pushNamed(context, '/viewworkout');
+          if (widget.from == 'prebuilt') {
+            await _prebuiltWorkoutService.addPrebuiltWorkout(workout);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Workout saved successfully to prebuilt!'),
+              ),
+            );
+            // navigate to show all workouts
+            Navigator.pushNamed(context, '/prebuiltworkout');
+          } else {
+            await _workoutService.addWorkout(workout);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Workout saved successfully!'),
+              ),
+            );
+          }
         } else {
           throw Exception('User not authenticated');
         }
