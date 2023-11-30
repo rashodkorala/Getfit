@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:getfit/view/settings_view.dart';
 import 'package:getfit/view/login_view.dart';
 import 'dart:io';
+import 'package:getfit/view/chatbot_screen.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -69,6 +70,15 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('Error logging out: $e');
     }
+  }
+
+  void navigateToChatbot(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatPage(currentUser: widget.currentUser),
+      ),
+    );
   }
 
   @override
@@ -143,11 +153,32 @@ class _HomePageState extends State<HomePage> {
               ),
               // Add other fields as needed
             ],
+            Spacer(), // To push the chat button to the bottom
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Have a question? Ask our chat bot!',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(width: 8),
+                  FloatingActionButton(
+                    onPressed: () {
+                      navigateToChatbot(context);
+                    },
+                    child: Icon(Icons.chat),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+
 
   Widget _buildProfileInfo(String label, String value) {
     return Padding(
@@ -202,3 +233,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+

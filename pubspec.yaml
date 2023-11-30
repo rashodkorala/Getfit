@@ -7,14 +7,19 @@ environment:
   sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
+  chat_gpt_sdk: ^2.2.5
   cloud_firestore: ^4.13.3
+  dash_chat_2: ^0.0.19
+  dialog_flowtter: ^0.2.0-nullsafety.0
   firebase_auth: ^4.14.1
   firebase_core: ^2.23.0
   firebase_ui_auth: ^1.10.0
   flutter:
     sdk: flutter
+  http: ^1.1.2
   image_picker: ^1.0.4
   shared_preferences: ^2.2.2
+  uuid: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +28,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/getfit-comp4768-4c8647cb206a.json
