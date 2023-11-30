@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Fetch user profile data
     fetchUserProfile();
   }
 
@@ -49,32 +48,26 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         this.selectedProfilePicture = selectedPicture as File;
       });
-      // Refresh data when returning from SettingsPage
       fetchUserProfile();
     }
   }
-
-
 
   Future<void> logOut(BuildContext context) async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
     try {
-      await _auth.signOut(); // Sign out the user from Firebase Auth
+      await _auth.signOut();
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => LoginViewWithDarkModeSwitch(
-            onDarkModeChanged: (value) {
-              // Add dark mode toggle logic here if needed
-            },
+            onDarkModeChanged: (value) {},
           ),
         ),
       );
     } catch (e) {
       print('Error logging out: $e');
-      // Handle logout error if any
     }
   }
 
@@ -103,7 +96,10 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Welcome, ${userProfile?['name'] ?? widget.currentUser?.email ?? 'Guest'}!'),
+            Text(
+              'Welcome, ${userProfile?['name'] ?? widget.currentUser?.email ?? 'Guest'}!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 20),
             if (userProfile != null)
               Container(
@@ -122,22 +118,86 @@ class _HomePageState extends State<HomePage> {
                       child: Icon(Icons.account_circle, size: 60),
                     ),
                     SizedBox(height: 20),
-                    Text('${userProfile?['description'] ?? 'No bio available'}'),
+                    Text(
+                      '${userProfile?['description'] ?? 'No bio available'}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    ),
                   ],
                 ),
               ),
             if (userProfile != null) ...[
-              Text('${userProfile?['gender'] ?? 'N/A'}'),
-              Text('Age: ${userProfile?['age'] ?? 'N/A'}'),
-              Text('Weight (kg): ${userProfile?['weight'] ?? 'N/A'}'),
-              Text('Height (cm): ${userProfile?['height'] ?? 'N/A'}'),
-              Text('${userProfile?['activityLevel'] ?? 'N/A'}'),
-              Text('BMI: ${userProfile?['bmi'] ?? 'N/A'}'),
-              Text('TDEE: ${userProfile?['tdee'] ?? 'N/A'} Calories'),
+              SizedBox(height: 20),
+              _buildProfileInfo('Gender', userProfile?['gender'] ?? 'N/A'),
+              _buildProfileInfo('Age', userProfile?['age']?.toString() ?? 'N/A'),
+              _buildProfileInfo('Weight (kg)', userProfile?['weight']?.toString() ?? 'N/A'),
+              _buildProfileInfo('Height (cm)', userProfile?['height']?.toString() ?? 'N/A'),
+              _buildProfileInfo('Activity Level', userProfile?['activityLevel'] ?? 'N/A'),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildInfoBox('BMI', userProfile?['bmi']?.toString() ?? 'N/A'),
+                  _buildInfoBox('TDEE', '${userProfile?['tdee']?.toString() ?? 'N/A'} Calories'),
+                ],
+              ),
               // Add other fields as needed
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildProfileInfo(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          Text(
+            value,
+            style: TextStyle(color: Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoBox(String label, String value) {
+    return Container(
+      width: 160,
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.blue.shade900,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.shade300,
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.all(8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
   }
