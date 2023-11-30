@@ -132,7 +132,12 @@ class _CreateIndividualWorkoutPageState
               ),
             );
             // navigate to show all workouts
-            Navigator.pushNamed(context, '/prebuiltworkout');
+            Navigator.pushReplacementNamed(context, '/prebuiltworkout')
+                .then((_) {
+              // After saving, pop all the routes until reaching the main page
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/prebuiltworkout', (route) => false);
+            });
           } else {
             await _workoutService.addWorkout(workout);
             ScaffoldMessenger.of(context).showSnackBar(
@@ -141,7 +146,11 @@ class _CreateIndividualWorkoutPageState
               ),
             );
             // navigate to show all workouts
-            Navigator.pushNamed(context, '/viewworkout');
+            Navigator.pushReplacementNamed(context, '/viewworkout').then((_) {
+              // After saving, pop all the routes until reaching the main page
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/viewworkout', (route) => false);
+            });
           }
         } else {
           throw Exception('User not authenticated');

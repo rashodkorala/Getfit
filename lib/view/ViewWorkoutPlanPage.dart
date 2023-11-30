@@ -130,6 +130,14 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                       content: Text('Workout deleted'),
                     ),
                   );
+
+                  // Navigate back to the workout list page
+                  Navigator.pushReplacementNamed(context, '/viewworkout')
+                      .then((_) {
+                    // After saving, pop all the routes until reaching the main page
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/viewworkout', (route) => false);
+                  });
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
