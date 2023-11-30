@@ -25,6 +25,7 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Prebuilt Workout Plans'),
+        
       ),
       body: FutureBuilder<List<Workout>>(
         future: _prebuiltWorkoutService.getPrebuiltWorkouts(),

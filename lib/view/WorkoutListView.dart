@@ -46,8 +46,10 @@ class _WorkoutListViewState extends State<WorkoutListView> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ViewWorkoutPlanPage(workout: workout),
+                        builder: (context) => ViewWorkoutPlanPage(
+                          workout: workout,
+                          isprebuilt: false,
+                        ),
                       ),
                     );
                   },

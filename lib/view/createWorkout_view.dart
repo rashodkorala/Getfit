@@ -22,7 +22,7 @@ class CreateWorkoutPlanPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CreateIndividualWorkoutPage(
-                      from: 'user',
+                      destination: 'user',
                     ),
                   ),
                 );

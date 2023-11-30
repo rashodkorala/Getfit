@@ -15,7 +15,7 @@ class prebuiltWorkoutService extends WorkoutService {
 
       List<Workout> workouts = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return Workout.fromMap(data);
+        return Workout.fromMap(data, doc.id);
       }).toList();
 
       return workouts;

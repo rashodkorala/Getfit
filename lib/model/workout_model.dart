@@ -1,11 +1,13 @@
 import 'package:getfit/model/workoutExercise_model.dart';
 
 class Workout {
+  String id;
   String name;
   DateTime creationDate;
   List<workoutExercise> exercises;
 
   Workout({
+    this.id = '',
     required this.name,
     required this.creationDate,
     required this.exercises,
@@ -19,12 +21,13 @@ class Workout {
     };
   }
 
-  factory Workout.fromMap(Map<String, dynamic> map) {
+  factory Workout.fromMap(Map<String, dynamic> map, String id) {
     return Workout(
+      id: id,
       name: map['name'],
       creationDate: map['creationDate'].toDate(),
       exercises: List<workoutExercise>.from(
           map['exercises']?.map((x) => workoutExercise.fromMap(x))),
     );
-  }       
+  }
 }
