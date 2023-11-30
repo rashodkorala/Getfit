@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:getfit/view/home_page.dart';
-import 'package:getfit/view/settings_view.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -137,23 +135,24 @@ class _SettingsPageState extends State<SettingsPage> {
     double bmr;
     if (gender == 'Male') {
       bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      return double.parse(bmr.toStringAsFixed(2));
     } else {
       bmr = 10 * weight + 6.25 * height - 5 * age - 161;
     }
 
     switch (activitylevel) {
       case 'Sedentary':
-        return bmr * 1.2;
+        return double.parse((bmr * 1.2).toStringAsFixed(2));
       case 'Lightly active':
-        return bmr * 1.375;
+        return double.parse((bmr * 1.375).toStringAsFixed(2));
       case 'Moderately active':
-        return bmr * 1.55;
+        return double.parse((bmr * 1.55).toStringAsFixed(2));
       case 'Very active':
-        return bmr * 1.725;
+        return double.parse((bmr * 1.725).toStringAsFixed(2));
       case 'Super active':
-        return bmr * 1.9;
+        return double.parse((bmr * 1.9).toStringAsFixed(2));
       default:
-        return bmr;
+        return double.parse(bmr.toStringAsFixed(2));
     }
   }
 
