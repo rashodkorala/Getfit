@@ -11,11 +11,9 @@ import '../model/workout_model.dart';
 class CreateIndividualWorkoutPage extends StatefulWidget {
   final String destination;
   final Workout? workout;
-
-  bool? isprebuilt; // Optional Workout object for editing
-
+  bool? isediting;
   CreateIndividualWorkoutPage(
-      {required this.destination, this.workout, isprebuilt});
+      {required this.destination, this.workout, this.isediting});
 
   @override
   _CreateIndividualWorkoutPageState createState() =>
@@ -90,9 +88,8 @@ class _CreateIndividualWorkoutPageState
                 const SizedBox(width: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    if (widget.workout != null && widget.isprebuilt == true) {
+                    if (widget.workout != null && widget.isediting == true) {
                       _updateWorkout();
-                      Navigator.pop(context);
                     } else {
                       _saveSelectedExercises();
                     }
@@ -342,6 +339,12 @@ class _CreateIndividualWorkoutPageState
               content: Text('Workout updated successfully!'),
             ),
           );
+
+          Navigator.pushReplacementNamed(context, '/viewworkout').then((_) {
+            // After saving, pop all the routes until reaching the main page
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/viewworkout', (route) => false);
+          });
         } else {
           throw Exception('User not authenticated');
         }

@@ -38,6 +38,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                     builder: (context) => CreateIndividualWorkoutPage(
                       destination: 'user',
                       workout: workout,
+                      isediting: true,
                     ),
                   ),
                 );
