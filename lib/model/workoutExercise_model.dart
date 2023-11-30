@@ -1,30 +1,56 @@
 import 'package:getfit/model/exercise_model.dart';
 
 class workoutExercise extends Exercise {
-  int sets = 0;
-  int reps = 0;
+  List<SetDetails> sets;
 
   workoutExercise({
-    required String name,
-    required String description,
+    required super.name,
+    required super.description,
     required this.sets,
-    required this.reps,
-  }) : super(name: name, description: description);
+  });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'description': description,
-      'sets': sets,
-      'reps': reps,
+      'sets': sets.map((set) => set.toMap()).toList(),
     };
   }
 
+  @override
   factory workoutExercise.fromMap(Map<String, dynamic> map) {
     return workoutExercise(
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      sets: map['sets'] ?? 0,
+      sets: (map['sets'] as List).map((x) => SetDetails.fromMap(x)).toList(),
+    );
+  }
+}
+
+class SetDetails {
+  int index;
+  late int weight;
+  late int reps;
+
+  SetDetails({
+    required this.index,
+    this.reps = 0,
+    this.weight = 0,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'index': index,
+      'weight': weight,
+      'reps': reps,
+    };
+  }
+
+  factory SetDetails.fromMap(Map<String, dynamic> map) {
+    return SetDetails(
+      index: map['index'] ?? 0,
+      weight: map['weight'] ?? 0,
       reps: map['reps'] ?? 0,
     );
   }

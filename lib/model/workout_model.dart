@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'exercise_model.dart';
+import 'package:getfit/model/workoutExercise_model.dart';
 
 class Workout {
   String name;
   DateTime creationDate;
-  List<Exercise> exercises;
+  List<workoutExercise> exercises;
 
   Workout({
     required this.name,
@@ -17,17 +15,16 @@ class Workout {
     return {
       'name': name,
       'creationDate': creationDate,
-      'exercises': exercises.map((exercise) => exercise.toMap()).toList(),
+      'exercises': exercises.map((x) => x.toMap()).toList(),
     };
   }
 
   factory Workout.fromMap(Map<String, dynamic> map) {
     return Workout(
-      name: map['name'] ?? '',
-      creationDate: (map['creationDate'] as Timestamp).toDate(),
-      exercises: (map['exercises'] as List<dynamic>)
-          .map((exercise) => Exercise.fromMap(exercise))
-          .toList(),
+      name: map['name'],
+      creationDate: map['creationDate'].toDate(),
+      exercises: List<workoutExercise>.from(
+          map['exercises']?.map((x) => workoutExercise.fromMap(x))),
     );
-  }
+  }       
 }
