@@ -1,20 +1,32 @@
-name: getfit
+name: part2_diary
 description: A new Flutter project.
 publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.1.5 <4.0.0'
+  sdk: '>=3.1.1 <4.0.0'
 
 dependencies:
-  firebase_core: ^2.22.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   flutter:
     sdk: flutter
+  path_provider: ^2.1.1
+  intl: ^0.18.1
+  firebase_core: ^2.21.0
+  firebase_auth: ^4.12.1
+  firebase_ui_auth: ^1.9.1
+  cloud_firestore: ^4.12.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  build_runner: ^2.0.7 # Use the latest version
+  hive_generator: ^2.0.1 # Use the latest version
+  analyzer: 6.2.0
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/background.jpeg
