@@ -207,14 +207,17 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                 try {
                   if (completedWorkout == true) {
                     await _workoutcompletedService.deleteWorkout(workout.id);
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(
+                        context, '/viewworkouthistory');
                   } else {
                     await _workoutService.deleteWorkout(workout.id);
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(context, '/viewworkout');
                   }
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Workout deleted')),
                   );
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacementNamed(context, '/viewworkout');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Failed to delete workout')),

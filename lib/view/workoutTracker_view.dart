@@ -5,6 +5,7 @@ import 'package:getfit/controller/workoutcompletedService.dart';
 import 'dart:async';
 
 import 'package:getfit/model/workout_model.dart';
+import 'package:getfit/view/workoutHistory_view.dart';
 
 import '../model/workoutExercise_model.dart';
 
@@ -55,7 +56,12 @@ class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
     } catch (e) {
       print(e);
     }
-    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutHistoryListView(),
+      ),
+    );
   }
 
   String _formatDuration(Duration duration) {
@@ -93,7 +99,7 @@ class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
                 ElevatedButton(
                   onPressed: _finishWorkout,
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -137,7 +143,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
       widget.exercise.sets.add(
           SetDetails(index: widget.exercise.sets.length, reps: 0, weight: 0));
       _completedSets.add(false);
-      
     });
   }
 

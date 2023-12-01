@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutcompletedService.dart';
 import '../model/workout_model.dart';
 import 'ViewWorkoutPlanPage.dart';
-import 'createWorkout_view.dart';
+// import 'createWorkout_view.dart';
 
 class WorkoutHistoryListView extends StatefulWidget {
   const WorkoutHistoryListView({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Workout Plans'),
+        title: const Text('Workout History'),
       ),
       body: FutureBuilder<List<Workout>>(
         future: _workoutService.getWorkouts(),
@@ -60,13 +60,13 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to the page for creating a new workout plan
-          showCreateWorkoutPlanBottomSheet(context);
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Navigate to the page for creating a new workout plan
+      //     showCreateWorkoutPlanBottomSheet(context);
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 
@@ -76,11 +76,11 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
   }
 }
 
-void showCreateWorkoutPlanBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return CreateWorkoutPlanBottomSheet();
-    },
-  );
-}
+// void showCreateWorkoutPlanBottomSheet(BuildContext context) {
+//   showModalBottomSheet(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return CreateWorkoutPlanBottomSheet();
+//     },
+//   );
+// }
