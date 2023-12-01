@@ -14,12 +14,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
       prebuiltWorkoutService();
 
   @override
-  void initState() {
-    super.initState();
-    // Data fetching can be initiated here if needed
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -35,26 +29,67 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Text('No prebuilt workouts available');
           } else {
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Two columns
+                childAspectRatio: 2.0, // Square items
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 Workout workout = snapshot.data![index];
-                return ListTile(
-                  title: Text(workout.name),
-                  subtitle:
-                      Text('Created on: ${formatDate(workout.creationDate)}'),
+                return InkWell(
                   onTap: () {
-                    // Navigate to the CreateIndividualWorkoutPage when the ListTile is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ViewWorkoutPlanPage(
-                                workout: workout,
-                                isprebuilt: true,
-                                completedWorkout: false,
-                              )),
+                        builder: (context) => ViewWorkoutPlanPage(
+                          workout: workout,
+                          isprebuilt: true,
+                          completedWorkout: false,
+                        ),
+                      ),
                     );
                   },
+                  child: Container(
+                    margin: EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.blue, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 4,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          workout.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Created on: ${formatDate(workout.creationDate)}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             );
@@ -65,7 +100,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
   }
 
   String formatDate(DateTime date) {
-    // Customize the date format as needed
     return '${date.year}-${date.month}-${date.day}';
   }
 }

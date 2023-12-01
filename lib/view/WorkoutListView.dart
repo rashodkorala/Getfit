@@ -24,25 +24,25 @@ class _WorkoutListViewState extends State<WorkoutListView> {
         future: _workoutService.getWorkouts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Text('No workout plans found.');
+            return const Text('No workout plans found.');
           } else {
             List<Workout> workouts = snapshot.data!;
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Two columns
+                childAspectRatio: 2, // Square items
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
               itemCount: workouts.length,
               itemBuilder: (context, index) {
                 Workout workout = workouts[index];
-
-                return ListTile(
-                  title: Text(workout.name),
-                  subtitle:
-                      Text('Created on: ${formatDate(workout.creationDate)}'),
-                  // Add more details as needed
+                return InkWell(
                   onTap: () {
-                    // Navigate to the ViewWorkoutPlanPage when the ListTile is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -54,6 +54,50 @@ class _WorkoutListViewState extends State<WorkoutListView> {
                       ),
                     );
                   },
+                  child: Container(
+                    margin: const EdgeInsets.all(12),
+                    padding:
+                        const EdgeInsets.all(4), // Padding inside the container
+                    decoration: BoxDecoration(
+                      color:
+                          Colors.grey[200], // Background color of the container
+                      borderRadius:
+                          BorderRadius.circular(20), // Rounded corners
+                      border:
+                          Border.all(color: Colors.blue, width: 2), // Border
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 4,
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          workout.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Created on: ${formatDate(workout.creationDate)}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             );
@@ -62,13 +106,7 @@ class _WorkoutListViewState extends State<WorkoutListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to the page for creating a new workout plan
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateWorkoutPlanPage(),
-            ),
-          );
+          showCreateWorkoutPlanBottomSheet(context);
         },
         child: const Icon(Icons.add),
       ),
@@ -76,7 +114,15 @@ class _WorkoutListViewState extends State<WorkoutListView> {
   }
 
   String formatDate(DateTime date) {
-    // Customize the date format as needed
     return '${date.year}-${date.month}-${date.day}';
   }
+}
+
+void showCreateWorkoutPlanBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return CreateWorkoutPlanBottomSheet();
+    },
+  );
 }

@@ -63,12 +63,7 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the page for creating a new workout plan
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateWorkoutPlanPage(),
-            ),
-          );
+          showCreateWorkoutPlanBottomSheet(context);
         },
         child: const Icon(Icons.add),
       ),
@@ -79,4 +74,13 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
     // Customize the date format as needed
     return '${date.year}-${date.month}-${date.day}';
   }
+}
+
+void showCreateWorkoutPlanBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return CreateWorkoutPlanBottomSheet();
+    },
+  );
 }
