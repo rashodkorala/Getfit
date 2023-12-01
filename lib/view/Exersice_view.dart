@@ -4,7 +4,6 @@ import '../model/exercise_model.dart';
 // Import your Exercise model
 
 void showExerciseDialog(BuildContext context, Exercise exercise) {
-  String? imageurl = '';
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -15,18 +14,18 @@ void showExerciseDialog(BuildContext context, Exercise exercise) {
         ),
         child: Container(
           constraints:
-              BoxConstraints(maxHeight: 500), // Adjust the height as needed
+              BoxConstraints(maxHeight: 600), // Adjust the height as needed
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                // child: Image.network(
-                //   imageurl,
-                //   height: 250,
-                //   fit: BoxFit.cover,
-                //   // Include loadingBuilder and errorBuilder as before
-                // ),
+                child: Image.network(
+                  exercise.gifUrl,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  // Include loadingBuilder and errorBuilder as before
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(16.0),
@@ -38,8 +37,8 @@ void showExerciseDialog(BuildContext context, Exercise exercise) {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  exercise.description,
-                  style: TextStyle(fontSize: 18),
+                  exercise.instructions.join('\n\n'),
+                  style: TextStyle(fontSize: 12),
                 ),
               ),
             ],

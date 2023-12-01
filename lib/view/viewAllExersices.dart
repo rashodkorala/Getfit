@@ -36,7 +36,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                 Exercise exercise = exercises[index];
                 return ListTile(
                     title: Text(exercise.name),
-                    subtitle: Text(exercise.description),
+                    subtitle: Text(exercise.bodyPart),
                     onTap: () => showExerciseDialog(context, exercise));
               },
             );
@@ -46,15 +46,15 @@ class _ExercisesPageState extends State<ExercisesPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to the page for adding a new exercise
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateExercisePage(),
-            ),
-          ).then((value) {
-            // Refresh the list of exercises when returning from the add exercise page
-            setState(() {});
-          });
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => CreateExercisePage(),
+          //   ),
+          // ).then((value) {
+          //   // Refresh the list of exercises when returning from the add exercise page
+          //   setState(() {});
+          // });
         },
         child: Icon(Icons.add),
       ),
