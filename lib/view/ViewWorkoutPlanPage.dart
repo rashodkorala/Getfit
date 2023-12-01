@@ -109,7 +109,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.weight} kg'),
+                            child: Text('${setDetail.weight}'),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
