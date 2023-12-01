@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_view.dart';
 
@@ -9,19 +10,13 @@ class HomePage extends StatelessWidget {
   const HomePage({Key? key, required this.currentUser}) : super(key: key);
 
   Future<void> signOut(BuildContext context) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('userUID');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('userUID');
 
-      await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          // Add dark mode toggle logic here if needed
-        },
-      )));
-    } catch (error) {
-      print(error.toString());
-    }
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => LoginView()),
+    );
   }
 
   @override
@@ -48,7 +43,18 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 20.0),
-
+            ElevatedButton(
+              onPressed: () {
+                // Assuming PersonalizedMealPlanQuestionnairePage is the meal plan generator
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PersonalizedMealPlanQuestionnairePage(),
+                  ),
+                );
+              },
+              child: Text('Generate Meal Plan'),
+            ),
           ],
         ),
       ),

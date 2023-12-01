@@ -12,6 +12,8 @@ dependencies:
   firebase_ui_auth: ^1.10.0
   flutter:
     sdk: flutter
+  path_provider: ^2.1.1
+  pdf: ^3.10.6
   shared_preferences: ^2.2.2
 
 dev_dependencies:
