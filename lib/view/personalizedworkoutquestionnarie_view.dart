@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:getfit/controller/chatGPTService.dart';
 
-Future<String> generateWorkoutPlan(Map<String, String> userAnswers) async {
-  final String apiKey =
-      "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"; // Replace with your OpenAI API key
-
-  final String prompt =
-      "Generate a personalized workout plan based on the user's answers:\n\n";
-  final List<String> questions = userAnswers.keys.toList();
-  final List<String> answers = userAnswers.values.toList();
-  final String input =
-      prompt + questions.join('\n') + '\n\nAnswers:\n' + answers.join('\n');
-
-  print('Input:\n$input');
-
-  return "Workout Plan"; // Replace with the generated workout plan
-}
+import 'generatedWorkout_view.dart';
 
 class PersonalizedPlanQuestionnairePage extends StatefulWidget {
   @override
@@ -27,21 +12,22 @@ class PersonalizedPlanQuestionnairePage extends StatefulWidget {
 class _PersonalizedPlanQuestionnairePageState
     extends State<PersonalizedPlanQuestionnairePage> {
   int currentStep = 0;
-  List<TextEditingController> questionControllers = List.generate(
-    7,
-    (index) => TextEditingController(),
-  );
 
   List<String> questions = [
     'What is your age?',
     'What is your height?',
     'What is your weight?',
+    'Gender',
     'What is your goal?',
     'Do you have any injuries (current or previous)?',
     'How often do you exercise?',
     'What do you want to focus on or improve?',
   ];
 
+  List<TextEditingController> questionControllers = List.generate(
+    8,
+    (index) => TextEditingController(),
+  );
   bool isLoading = false; // Variable to track loading state
 
   @override
@@ -66,14 +52,10 @@ class _PersonalizedPlanQuestionnairePageState
                     } else {
                       // If all questions are answered, show loading screen
                       isLoading = true;
+                      Future.delayed(Duration(seconds: 2));
+                      processUserAnswers();
                     }
                   });
-
-                  // Simulate loading for 2 seconds
-                  await Future.delayed(Duration(seconds: 2));
-
-                  // Process user answers and generate personalized plan
-                  processUserAnswers();
                 }
               },
               onStepCancel: () {
@@ -92,13 +74,22 @@ class _PersonalizedPlanQuestionnairePageState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(questions[index]),
+                      SizedBox(height: 4),
+                      // Text(
+                      //   'Example: ' + getExampleForQuestion(questions[index]),
+                      //   style: TextStyle(
+                      //       fontSize: 12,
+                      //       fontStyle: FontStyle.italic,
+                      //       color: Colors.grey),
+                      // ),
                       TextFormField(
                         controller: questionControllers[index],
                         keyboardType: index == 0 || index == 1 || index == 2
                             ? TextInputType.number
                             : TextInputType.text,
                         decoration: InputDecoration(
-                          hintText: 'Enter your answer',
+                          hintText: 'Example: ' +
+                              getExampleForQuestion(questions[index]),
                         ),
                       ),
                     ],
@@ -111,57 +102,52 @@ class _PersonalizedPlanQuestionnairePageState
 
   Widget _buildLoadingScreen() {
     return Center(
-      child: CircularProgressIndicator(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 20),
+          Text('Generating your personalized workout plan...',
+              style: TextStyle(fontSize: 16)),
+        ],
+      ),
     );
   }
 
   bool validateCurrentStep() {
-    // Validate the current step before proceeding to the next one
     if (currentStep == 0 || currentStep == 1 || currentStep == 2) {
-      // Validate age, height, and weight
       return validateNumber(questionControllers[currentStep].text);
+    } else {
+      return validateText(questionControllers[currentStep].text);
     }
-    return true; // No validation for other questions
   }
 
   bool validateNumber(String? value) {
-    // Validate if the input is a number
     if (value == null || value.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('This field is required'),
-        ),
-      );
+      showSnackbar('This field is required');
       return false;
     }
     if (double.tryParse(value) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid number'),
-        ),
-      );
+      showSnackbar('Please enter a valid number');
       return false;
     }
-    // Additional validation based on the question
-    if (questions[currentStep].contains('weight') && double.parse(value) <= 5) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Weight should be above 5'),
-        ),
-      );
+    return true;
+  }
+
+  bool validateText(String? value) {
+    if (value == null || value.isEmpty) {
+      showSnackbar('This field is required');
       return false;
     }
     return true;
   }
 
   void saveAnswer() {
-    // Save the current answer
     String answer = questionControllers[currentStep].text;
-    print('Question ${currentStep + 1}: $answer');
+    print('Answer for question ${currentStep + 1}: $answer');
   }
 
   void processUserAnswers() async {
-    // Process the answers and generate the personalized plan...
     Map<String, String> userAnswers = {};
 
     for (int i = 0; i < questionControllers.length; i++) {
@@ -170,17 +156,79 @@ class _PersonalizedPlanQuestionnairePageState
       userAnswers[question] = answer;
     }
 
-    // Generate workout plan using ChatGPT
-    try {
-      String workoutPlan = await generateWorkoutPlan(userAnswers);
-      print('Generated Workout Plan:\n$workoutPlan');
-    } catch (e) {
-      print('Error generating workout plan: $e');
-    }
-
-    // Simulate stopping the loading state
+    // Simulate stopping the loading state after processing answers
     setState(() {
       isLoading = false;
     });
+
+    // Add code here to call the API and generate the workout plan
+    String userPrompt = createPromptFromAnswers(userAnswers);
+    generateWorkoutPlan(userPrompt);
+
+    // You can replace the above line with actual API call
+  }
+
+  void showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  String getExampleForQuestion(String question) {
+    switch (question) {
+      case 'What is your age?':
+        return 'e.g., 29';
+      case 'What is your goal?':
+        return 'e.g., Lose weight, Gain muscle';
+      case 'Do you have any injuries (current or previous)?':
+        return 'e.g., Knee injury, Back injury';
+      case 'How often do you exercise?':
+        return 'e.g., 3 times a week';
+      case 'What do you want to focus on or improve?':
+        return 'e.g., Abs, Arms, Legs';
+      case 'What is your height?':
+        return 'e.g., 170 cm';
+      case 'What is your weight?':
+        return 'e.g., 70 kg';
+      case 'Gender':
+        return 'Male, Female, other, prefer not to say';
+      default:
+        return '';
+    }
+  }
+
+  String createPromptFromAnswers(Map<String, String> userAnswers) {
+    String prompt =
+        "I have a user who needs a personalized workout plan. Here are their details:\n";
+
+    userAnswers.forEach((question, answer) {
+      // Format each question-answer pair into a readable sentence
+      String formattedQuestion = question.replaceAll('?', '');
+      prompt += "- ${formattedQuestion}: ${answer}.\n";
+    });
+
+    prompt +=
+        "\nCan you create a personalized workout plan based on these details?";
+
+    return prompt;
+  }
+
+  void generateWorkoutPlan(String prompt) async {
+    try {
+      String workoutPlan = await ChatGPTService().sendPromptToOpenAI(prompt);
+      // print('Generated Workout Plan:\n$workoutPlan');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkoutPlanScreen(workoutPlan: workoutPlan),
+        ),
+      );
+      // Display the workout plan to the user or process it as needed
+    } catch (e) {
+      print('Error in generating: $e');
+      // Handle the error appropriately
+      throw e; // Add a throw statement to handle the potential non-nullable return type
+    }
   }
 }
