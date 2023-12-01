@@ -68,30 +68,49 @@ class _GymReminderViewState extends State<GymReminderView> {
     );
   }
 
-  Future<void> _setReminder() async {
-    void _setReminder() async {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        Timestamp reminderTimestamp = Timestamp.fromDate(DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            selectedTime.hour,
-            selectedTime.minute));
+  void _setReminder() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      Timestamp reminderTimestamp = Timestamp.fromDate(DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute));
 
+      try {
         await FirebaseFirestore.instance.collection('gym_reminders').add({
           'userId': user.uid,
           'reminderTime': reminderTimestamp,
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Reminder set successfully!'),
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Error: No user logged in'),
+        // Navigate back to home page and show the pop-up after setting the reminder
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Gym Reminder Set"),
+            content: Text(
+                "Gym reminder set for: ${selectedDate.toLocal()} at ${selectedTime.format(context)}"),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error setting reminder: $e'),
         ));
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Error: No user logged in'),
+      ));
     }
   }
 
