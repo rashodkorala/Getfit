@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_view.dart';
+import 'gym_reminder_view.dart'; // Updated import statement
 
 class HomePage extends StatelessWidget {
   final User? currentUser;
@@ -14,11 +15,13 @@ class HomePage extends StatelessWidget {
       await prefs.remove('userUID');
 
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          // Add dark mode toggle logic here if needed
-        },
-      )));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => LoginViewWithDarkModeSwitch(
+          onDarkModeChanged: (value) {
+            // Add dark mode toggle logic here if needed
+          },
+        ),
+      ));
     } catch (error) {
       print(error.toString());
     }
@@ -48,7 +51,17 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 20.0),
-
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          GymReminderView()), // Updated to GymReminderView
+                );
+              },
+              child: Text('Gym Reminder'),
+            ),
           ],
         ),
       ),

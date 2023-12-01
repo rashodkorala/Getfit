@@ -7,11 +7,16 @@ environment:
   sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
+  cloud_firestore: ^4.13.3
   firebase_auth: ^4.14.1
   firebase_core: ^2.23.0
+  firebase_messaging: ^14.7.6
   firebase_ui_auth: ^1.10.0
   flutter:
     sdk: flutter
+  flutter_datetime_picker: ^1.5.1
+  flutter_local_notifications: ^16.2.0
+  flutter_switch: ^0.3.2
   shared_preferences: ^2.2.2
 
 dev_dependencies:

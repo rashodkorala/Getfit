@@ -1,6 +1,8 @@
+// Import necessary packages and files
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:getfit/api/firebase_api.dart'; //import for api
 import 'package:shared_preferences/shared_preferences.dart';
 import 'view/login_view.dart';
 import 'view/sign_up_view.dart';
@@ -13,6 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //await FirebaseApi().initNotificatios();
 
   // Check if the user is already logged in
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -45,15 +48,16 @@ class _MyAppState extends State<MyApp> {
       home: widget.isLoggedIn
           ? HomePage(currentUser: FirebaseAuth.instance.currentUser)
           : LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          setState(() {
-            _isDarkMode = value;
-          });
-        },
-      ),
+              onDarkModeChanged: (value) {
+                setState(() {
+                  _isDarkMode = value;
+                });
+              },
+            ),
       routes: {
         '/signup': (context) => SignUpView(),
         '/forgotpassword': (context) => ForgotPasswordView(),
+        //'/remindersettings': (context) => ReminderSettingsScreen(),
       },
     );
   }
