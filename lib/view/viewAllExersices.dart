@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../controller/exerciesService.dart';
 import '../model/exercise_model.dart';
+import 'Exersice_view.dart';
 import 'createExercise_view.dart';
 
 class ExercisesPage extends StatefulWidget {
@@ -34,10 +35,9 @@ class _ExercisesPageState extends State<ExercisesPage> {
               itemBuilder: (context, index) {
                 Exercise exercise = exercises[index];
                 return ListTile(
-                  title: Text(exercise.name),
-                  subtitle: Text(exercise.description),
-                  // Add more details or actions as needed
-                );
+                    title: Text(exercise.name),
+                    subtitle: Text(exercise.description),
+                    onTap: () => showExerciseDialog(context, exercise));
               },
             );
           }
