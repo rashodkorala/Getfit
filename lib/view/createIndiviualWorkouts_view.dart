@@ -145,8 +145,7 @@ class _CreateIndividualWorkoutPageState
             // navigate to show all workouts
             Navigator.pushReplacementNamed(context, '/viewworkout').then((_) {
               // After saving, pop all the routes until reaching the main page
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/viewworkout', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
             });
           }
         } else {
@@ -340,12 +339,7 @@ class _CreateIndividualWorkoutPageState
             ),
           );
 
-          Navigator.pushReplacementNamed(context, '/viewworkout').then((_) {
-            // After saving, pop all the routes until reaching the main page
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/viewworkout', (route) => false);
-          });
-        } else {
+          Navigator.popAndPushNamed(context, '/viewworkout');
           throw Exception('User not authenticated');
         }
       } else {
