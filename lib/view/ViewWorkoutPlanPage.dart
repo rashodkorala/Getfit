@@ -1,16 +1,16 @@
-// ignore_for_file: use_build_context_synchronously, must_be_immutable
+// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations, use_key_in_widget_constructors, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workout_model.dart';
-
 import 'createIndiviualWorkouts_view.dart';
+// import 'workoutTracker_view.dart';
 
 class ViewWorkoutPlanPage extends StatelessWidget {
   final Workout workout;
   final bool isprebuilt;
 
-  WorkoutService _workoutService = WorkoutService();
+  final WorkoutService _workoutService = WorkoutService();
 
   ViewWorkoutPlanPage({
     required this.workout,
@@ -21,14 +21,13 @@ class ViewWorkoutPlanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(workout.name),
         actions: <Widget>[
-          if (isprebuilt == false)
+          if (!isprebuilt)
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () => _confirmDelete(context),
             ),
-          if (isprebuilt == false)
+          if (!isprebuilt)
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
@@ -38,7 +37,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                     builder: (context) => CreateIndividualWorkoutPage(
                       destination: 'user',
                       workout: workout,
-                      isediting: true,
+                      isEditing: true,
                     ),
                   ),
                 );
@@ -50,28 +49,17 @@ class ViewWorkoutPlanPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('Title: ${workout.name}'),
-            Text('Created on: ${formatDate(workout.creationDate)}'),
+            Text('${workout.name}',
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(' Created on: ${formatDate(workout.creationDate)}',
+                style: TextStyle(color: Colors.grey[600])),
             const SizedBox(height: 16),
-            const Text('Exercises:'),
             _buildExerciseList(),
-            if (isprebuilt == true)
-              ElevatedButton(
-                onPressed: () async {
-                  //show create workout page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateIndividualWorkoutPage(
-                        destination: 'user',
-                        workout: workout,
-                      ),
-                    ),
-                  );
-                },
-                child: const Text('Create a Workout Plan'),
-              ),
+            if (isprebuilt) _createWorkoutButton(context),
+            _startWorkoutButton(context),
           ],
         ),
       ),
@@ -82,26 +70,99 @@ class ViewWorkoutPlanPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: workout.exercises.map((exercise) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              title: Text(exercise.name),
-              subtitle: Text(exercise.description),
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 9.0),
+          child: Padding(
+            padding: const EdgeInsets.all(9.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  exercise.name,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 4),
+                Table(
+                  columnWidths: const {
+                    0: FlexColumnWidth(),
+                    1: FlexColumnWidth(),
+                    2: FlexColumnWidth(),
+                  },
+                  children: [
+                    const TableRow(
+                      children: [
+                        Text('Set',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('Weight',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('Reps',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    ...exercise.sets.map((setDetail) {
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text('${setDetail.index + 1}'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text('${setDetail.weight} kg'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text('${setDetail.reps} reps'),
+                          ),
+                        ],
+                      );
+                    }),
+                  ],
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: exercise.sets.map((setDetail) {
-                  return Text(
-                      'Set ${setDetail.index + 1}: ${setDetail.reps} reps, ${setDetail.weight} kgs');
-                }).toList(),
-              ),
-            ),
-          ],
+          ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _createWorkoutButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateIndividualWorkoutPage(
+              destination: 'user',
+              workout: workout,
+            ),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      ),
+      child: const Text('Create a Workout Plan'),
+    );
+  }
+
+  Widget _startWorkoutButton(BuildContext context) {
+    return Center(
+      // Wrap the ElevatedButton with a Center widget
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0), // Rounded edges
+          ),
+        ),
+        child: const Text('Start Workout'),
+      ),
     );
   }
 
@@ -120,35 +181,18 @@ class ViewWorkoutPlanPage extends StatelessWidget {
             TextButton(
               child: const Text('Delete'),
               onPressed: () async {
-                // Logic to delete the workout
-                // For example, remove it from a list or database
-
                 try {
-                  // Delete the workout from Firestore
                   await _workoutService.deleteWorkout(workout.id);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Workout deleted'),
-                    ),
+                    const SnackBar(content: Text('Workout deleted')),
                   );
-
-                  // Navigate back to the workout list page
-                  Navigator.pushReplacementNamed(context, '/viewworkout')
-                      .then((_) {
-                    // After saving, pop all the routes until reaching the main page
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/viewworkout', (route) => false);
-                  });
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacementNamed(context, '/viewworkout');
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Failed to delete workout'),
-                    ),
+                    const SnackBar(content: Text('Failed to delete workout')),
                   );
                 }
-                Navigator.of(context).pop();
-
-                // Potentially navigate back or show a confirmation
               },
             ),
           ],
@@ -158,7 +202,6 @@ class ViewWorkoutPlanPage extends StatelessWidget {
   }
 
   String formatDate(DateTime date) {
-    // Customize the date format as needed
     return '${date.year}-${date.month}-${date.day}';
   }
 }
