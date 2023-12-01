@@ -49,7 +49,6 @@ class _WorkoutListViewState extends State<WorkoutListView> {
                         builder: (context) => ViewWorkoutPlanPage(
                           workout: workout,
                           isprebuilt: false,
-                          completedWorkout: false,
                         ),
                       ),
                     );
