@@ -1,7 +1,8 @@
+// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations, use_key_in_widget_constructors, must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workout_model.dart';
-
 import 'createIndiviualWorkouts_view.dart';
 import 'workoutTracker_view.dart';
 
@@ -9,7 +10,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
   final Workout workout;
   final bool isprebuilt;
 
-  WorkoutService _workoutService = WorkoutService();
+  final WorkoutService _workoutService = WorkoutService();
 
   ViewWorkoutPlanPage({
     required this.workout,
@@ -36,7 +37,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                     builder: (context) => CreateIndividualWorkoutPage(
                       destination: 'user',
                       workout: workout,
-                      isediting: true,
+                      isEditing: true,
                     ),
                   ),
                 );
@@ -51,7 +52,8 @@ class ViewWorkoutPlanPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text('${workout.name}',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             Text(' Created on: ${formatDate(workout.creationDate)}',
                 style: TextStyle(color: Colors.grey[600])),
             const SizedBox(height: 16),
@@ -75,15 +77,49 @@ class ViewWorkoutPlanPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exercise.name,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                Text(
+                  exercise.name,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
+                ),
                 const SizedBox(height: 4),
-                // ...exercise.sets.map((setDetail) {
-                //   return Text(
-                //       'Set ${setDetail.index + 1}: ${setDetail.reps} reps, ${setDetail.weight} kgs',
-                //       style: TextStyle(color: Colors.grey[700]));
-                // }).toList(),
+                Table(
+                  columnWidths: const {
+                    0: FlexColumnWidth(),
+                    1: FlexColumnWidth(),
+                    2: FlexColumnWidth(),
+                  },
+                  children: [
+                    const TableRow(
+                      children: [
+                        Text('Set',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('Weight',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('Reps',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    ...exercise.sets.map((setDetail) {
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text('${setDetail.index + 1}'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text('${setDetail.weight} kg'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text('${setDetail.reps} reps'),
+                          ),
+                        ],
+                      );
+                    }),
+                  ],
+                ),
               ],
             ),
           ),
@@ -105,11 +141,11 @@ class ViewWorkoutPlanPage extends StatelessWidget {
           ),
         );
       },
-      child: const Text('Create a Workout Plan'),
       style: ElevatedButton.styleFrom(
-        primary: Colors.green,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        backgroundColor: Colors.green,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       ),
+      child: const Text('Create a Workout Plan'),
     );
   }
 
@@ -125,14 +161,14 @@ class ViewWorkoutPlanPage extends StatelessWidget {
             ),
           );
         },
-        child: const Text('Start Workout'),
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.secondary,
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0), // Rounded edges
           ),
         ),
+        child: const Text('Start Workout'),
       ),
     );
   }

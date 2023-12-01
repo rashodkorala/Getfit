@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/view/ViewWorkoutPlanPage.dart';
 import '../model/workout_model.dart';
-import 'createIndiviualWorkouts_view.dart';
 
 class ChoosePrebuiltWorkoutPage extends StatefulWidget {
   @override
@@ -25,7 +24,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Prebuilt Workout Plans'),
-        
       ),
       body: FutureBuilder<List<Workout>>(
         future: _prebuiltWorkoutService.getPrebuiltWorkouts(),

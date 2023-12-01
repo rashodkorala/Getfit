@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
@@ -11,9 +9,13 @@ import '../model/workout_model.dart';
 class CreateIndividualWorkoutPage extends StatefulWidget {
   final String destination;
   final Workout? workout;
-  bool? isediting;
-  CreateIndividualWorkoutPage(
-      {required this.destination, this.workout, this.isediting});
+  final bool? isEditing;
+
+  CreateIndividualWorkoutPage({
+    required this.destination,
+    this.workout,
+    this.isEditing,
+  });
 
   @override
   _CreateIndividualWorkoutPageState createState() =>
@@ -39,7 +41,7 @@ class _CreateIndividualWorkoutPageState
   }
 
   void _initializePage() {
-    if (widget.workout != null) {
+    if (widget.workout != null && widget.isEditing == true) {
       workoutNameController.text = widget.workout!.name;
       selectedExercises = widget.workout!.exercises;
     }
@@ -56,12 +58,61 @@ class _CreateIndividualWorkoutPageState
     }
   }
 
+  void _saveOrUpdateWorkout() async {
+    String workoutName = workoutNameController.text;
+    if (workoutName.isEmpty || selectedExercises.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add a name and exercises')),
+      );
+      return;
+    }
+
+    Workout newWorkout = Workout(
+      name: workoutName,
+      exercises: selectedExercises,
+      creationDate: DateTime.now(),
+    );
+
+    try {
+      if (widget.isEditing == true) {
+        // Update existing workout
+        await _workoutService.updateWorkout(widget.workout!.id, newWorkout);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Workout updated successfully!')),
+        );
+      } else {
+        // Save new workout
+        if (widget.destination == 'prebuilt') {
+          await _prebuiltWorkoutService.addPrebuiltWorkout(newWorkout);
+        } else {
+          await _workoutService.addWorkout(newWorkout);
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Workout saved successfully!')),
+        );
+      }
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error saving workout: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to save workout')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Workout Plan'),
-        //add a button to the app bar to save the workout with text save and a icon
+        title: Text(widget.isEditing == true
+            ? 'Edit Workout Plan'
+            : 'Create Workout Plan'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _saveOrUpdateWorkout,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -77,26 +128,22 @@ class _CreateIndividualWorkoutPageState
             ),
             const SizedBox(height: 16.0),
             const Text('Selected Exercises:'),
-            _showSelectedExercises(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _addExercise,
-                  child: const Text('Add Exercise'),
-                ),
-                const SizedBox(width: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (widget.workout != null && widget.isediting == true) {
-                      _updateWorkout();
-                    } else {
-                      _saveSelectedExercises();
-                    }
+            Expanded(
+              child: ListView.builder(
+                itemCount: selectedExercises.length,
+                itemBuilder: (context, index) => ExerciseTile(
+                  exercise: selectedExercises[index],
+                  onRemove: () {
+                    setState(() {
+                      selectedExercises.removeAt(index);
+                    });
                   },
-                  child: const Text('Save'),
                 ),
-              ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: _addExercise,
+              child: const Text('Add Exercise'),
             ),
           ],
         ),
@@ -104,64 +151,8 @@ class _CreateIndividualWorkoutPageState
     );
   }
 
-  void _saveSelectedExercises() async {
-    try {
-      String workoutName = workoutNameController.text;
-
-      if (workoutName.isNotEmpty && selectedExercises.isNotEmpty) {
-        // Get the authenticated user's ID
-        String? userId = await _workoutService.getUserId();
-
-        if (userId != null) {
-          // Create a Workout instance with the selected exercises
-          Workout workout = Workout(
-            name: workoutName,
-            exercises: selectedExercises,
-            creationDate: DateTime.now(),
-          );
-          print(workout.toMap());
-          // Save the workout to Firestore using the WorkoutService
-          if (widget.destination == 'prebuilt') {
-            await _prebuiltWorkoutService.addPrebuiltWorkout(workout);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Workout saved successfully to prebuilt!'),
-              ),
-            );
-            // navigate to show all workouts
-            Navigator.pushReplacementNamed(context, '/prebuiltworkout')
-                .then((_) {
-              // After saving, pop all the routes until reaching the main page
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/prebuiltworkout', (route) => false);
-            });
-          } else {
-            await _workoutService.addWorkout(workout);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Workout saved successfully!'),
-              ),
-            );
-            // navigate to show all workouts
-            Navigator.pushReplacementNamed(context, '/viewworkout').then((_) {
-              // After saving, pop all the routes until reaching the main page
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-            });
-          }
-        } else {
-          throw Exception('User not authenticated');
-        }
-      } else {
-        // Handle the case where workout name or selected exercises are empty
-      }
-    } catch (e) {
-      // Handle errors (e.g., show an error message)
-      print('Error saving workout: $e');
-    }
-  }
-
   void _addExercise() {
-    // Show a dialog with a list of available exercises
+    // Existing logic to add an exercise
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -198,156 +189,140 @@ class _CreateIndividualWorkoutPageState
       },
     );
   }
+}
 
-  _showSelectedExercises() {
-    if (selectedExercises.isEmpty) {
-      return const Text('No exercises selected');
-    } else {
-      return Expanded(
-        child: _SelectedExercise(),
-      );
-    }
+class ExerciseTile extends StatefulWidget {
+  final workoutExercise exercise;
+  final VoidCallback onRemove;
+
+  const ExerciseTile({
+    Key? key,
+    required this.exercise,
+    required this.onRemove,
+  }) : super(key: key);
+
+  @override
+  _ExerciseTileState createState() => _ExerciseTileState();
+}
+
+class _ExerciseTileState extends State<ExerciseTile> {
+  List<bool> _completedSets;
+
+  _ExerciseTileState() : _completedSets = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _completedSets =
+        List.generate(widget.exercise.sets.length, (index) => false);
   }
 
-  //create widget to show the selected exercises
-  Widget _SelectedExercise() {
-    return ListView.builder(
-      itemCount: selectedExercises.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(selectedExercises[index].name),
-              // Show the sets for the selected exercise
-              _showSets(selectedExercises[index]),
-              // Add a button to add sets for the selected exercise
-              ElevatedButton(
-                  onPressed: () {
-                    _addset(selectedExercises[index].sets);
-                  },
-                  child: const Text('Add Set')),
-            ],
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              // Remove the selected exercise from the list of selected exercises
-              setState(() {
-                selectedExercises.removeAt(index);
-              });
-            },
-          ),
-        );
-      },
-    );
+  void _addSet() {
+    setState(() {
+      widget.exercise.sets.add(
+          SetDetails(index: widget.exercise.sets.length, reps: 0, weight: 0));
+      _completedSets.add(false);
+    });
   }
 
-  _showSets(workoutExercise selectedExercis) {
-    if (selectedExercis.sets.isEmpty) {
-      return const Text('No sets added');
-    } else {
-      return ListView.builder(
-          shrinkWrap: true,
-          itemCount: selectedExercis.sets.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text(
-                  'Set ${selectedExercis.sets[index].index + 1}: ${selectedExercis.sets[index].reps} reps, ${selectedExercis.sets[index].weight} kg'),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  // Remove the selected exercise from the list of selected exercises
-                  setState(() {
-                    selectedExercis.sets.removeAt(index);
-                  });
-                },
-              ),
-            );
-          });
-    }
+  void _removeSet(int index) {
+    setState(() {
+      widget.exercise.sets.removeAt(index);
+      _completedSets.removeAt(index);
+    });
   }
 
-  void _addset(List<SetDetails> sets) {
-    int reps = 0;
-    int weight = 0;
-    // Show a dialog with a list of available exercises
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add set'),
-          content: SizedBox(
-              width: double.maxFinite,
-              height: 300,
-              child: Column(
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Enter reps',
-                    ),
-                    onChanged: (value) {
-                      reps = int.parse(value);
-                    },
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Enter weight',
-                    ),
-                    onChanged: (value) {
-                      weight = int.parse(value);
-                    },
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          sets.add(SetDetails(
-                              index: sets.length, reps: reps, weight: weight));
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Add Set')),
-                  const SizedBox(height: 16.0),
-                ],
-              )),
-        );
-      },
-    );
-  }
-
-  void _updateWorkout() async {
-    try {
-      String workoutName = workoutNameController.text;
-
-      if (workoutName.isNotEmpty && selectedExercises.isNotEmpty) {
-        // Get the authenticated user's ID
-        String? userId = await _workoutService.getUserId();
-
-        if (userId != null) {
-          // Create a Workout instance with the selected exercises
-          Workout workout = Workout(
-            name: workoutName,
-            exercises: selectedExercises,
-            creationDate: DateTime.now(),
-          );
-          // print(workout.toMap());
-          // Save the workout to Firestore using the WorkoutService
-          await _workoutService.updateWorkout(widget.workout!.id, workout);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Workout updated successfully!'),
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.exercise.name,
+              style:
+                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-          );
-
-          Navigator.popAndPushNamed(context, '/viewworkout');
-          throw Exception('User not authenticated');
-        }
-      } else {
-        // Handle the case where workout name or selected exercises are empty
-      }
-    } catch (e) {
-      // Handle errors (e.g., show an error message)
-      print('Error saving workout: $e');
-    }
+            const SizedBox(height: 8.0),
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(),
+                1: FlexColumnWidth(),
+                2: FlexColumnWidth(),
+                3: IntrinsicColumnWidth(),
+              },
+              children: [
+                const TableRow(
+                  children: [
+                    Text('Set'),
+                    Text('Weight'),
+                    Text('Reps'),
+                    SizedBox
+                        .shrink(), // Placeholder for the remove button column
+                  ],
+                ),
+                ...List.generate(widget.exercise.sets.length, (index) {
+                  return TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text('${index + 1}'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: TextFormField(
+                          initialValue: '${widget.exercise.sets[index].weight}',
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          onChanged: (value) => setState(() {
+                            widget.exercise.sets[index].weight =
+                                int.parse(value);
+                          }),
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 8),
+                          ),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: TextFormField(
+                          initialValue: '${widget.exercise.sets[index].reps}',
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          onChanged: (value) => setState(() {
+                            widget.exercise.sets[index].reps = int.parse(value);
+                          }),
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 8),
+                          ),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: () => _removeSet(index),
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+            TextButton(
+              onPressed: _addSet,
+              child: const Text('Add Set'),
+              style: TextButton.styleFrom(foregroundColor: Colors.blue),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
