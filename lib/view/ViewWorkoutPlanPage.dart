@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workout_model.dart';
+import '../controller/workoutcompletedService.dart';
 import 'createIndiviualWorkouts_view.dart';
 import 'workoutTracker_view.dart';
 
@@ -12,6 +13,8 @@ class ViewWorkoutPlanPage extends StatelessWidget {
   final bool completedWorkout;
 
   final WorkoutService _workoutService = WorkoutService();
+  final WorkoutcompletedService _workoutcompletedService =
+      WorkoutcompletedService();
 
   ViewWorkoutPlanPage({
     required this.workout,
@@ -29,7 +32,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
               icon: const Icon(Icons.delete),
               onPressed: () => _confirmDelete(context),
             ),
-          if (!isprebuilt)
+          if (!isprebuilt && !completedWorkout)
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
@@ -202,7 +205,11 @@ class ViewWorkoutPlanPage extends StatelessWidget {
               child: const Text('Delete'),
               onPressed: () async {
                 try {
-                  await _workoutService.deleteWorkout(workout.id);
+                  if (completedWorkout == true) {
+                    await _workoutcompletedService.deleteWorkout(workout.id);
+                  } else {
+                    await _workoutService.deleteWorkout(workout.id);
+                  }
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Workout deleted')),
                   );
