@@ -2,33 +2,42 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 
-const firestore = admin.firestore();
+exports.checkAndSendReminders = functions.pubsub.schedule("every 1 minutes")
+    .timeZone("America/St_Johns") // Updated to Newfoundland Time Zone
+    .onRun(async (context) => {
+      const now = admin.firestore.Timestamp.now();
+      const profilesSnapshot = await admin.firestore().collection(
+          "profiles").get();
 
-// Create a Gym Reminder
-exports.createGymReminder = functions.https.onCall(async (data, context) => {
-  try {
-    if (!context.auth) {
-      throw new functions.https.HttpsError("unauthenticated",
-          "User is not authenticated");
-    }
+      // Using for...of loop instead of forEach for proper async/await handling
+      for (const profileDoc of profilesSnapshot.docs) {
+        const remindersSnapshot = await profileDoc.ref.collection(
+            "gym_reminders")
+            .where("reminderTime", "<=", now)
+            .get();
 
-    const {date, time} = data;
+        for (const reminderDoc of remindersSnapshot.docs) {
+          const reminder = reminderDoc.data();
 
-    // Optionally validate date and time here
+          if (reminder.token) {
+            const payload = {
+              notification: {
+                title: "Gym Reminder",
+                body: "It's time for your gym session!",
+              },
+              token: reminder.token,
+            };
 
-    const userId = context.auth.uid;
+            try {
+              await admin.messaging().send(payload);
+            // Optionally delete the reminder after sending
+            // await reminderDoc.ref.delete();
+            } catch (error) {
+              console.error("Error sending notification:", error);
+            }
+          }
+        }
+      }
 
-    const gymReminder = {
-      userId,
-      date,
-      time,
-    };
-
-    const docRef = await firestore.collection("gym_reminders").add(gymReminder);
-
-    return {message: "Gym reminder created successfully!", docId: docRef.id};
-  } catch (error) {
-    console.error("Error creating gym reminder:", error);
-    throw new functions.https.HttpsError("internal", "Error creating reminder");
-  }
-});
+      return null;
+    });

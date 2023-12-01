@@ -49,7 +49,7 @@ class _GymReminderViewState extends State<GymReminderView> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              title: Text("Date: ${selectedDate.toLocal()}"),
+              title: Text("Date: ${selectedDate.toLocal().toString()}"),
               trailing: const Icon(Icons.keyboard_arrow_down),
               onTap: () => _selectDate(context),
             ),
@@ -70,43 +70,47 @@ class _GymReminderViewState extends State<GymReminderView> {
 
   void _setReminder() async {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      Timestamp reminderTimestamp = Timestamp.fromDate(DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          selectedTime.hour,
-          selectedTime.minute));
+    String? token = await FirebaseMessaging.instance.getToken();
 
-      try {
-        await FirebaseFirestore.instance.collection('gym_reminders').add({
-          'userId': user.uid,
-          'reminderTime': reminderTimestamp,
-        });
+    if (user != null && token != null) {
+      final DateTime reminderDateTime = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        selectedTime.hour,
+        selectedTime.minute,
+      );
 
-        // Navigate back to home page and show the pop-up after setting the reminder
-        Navigator.pop(context);
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Gym Reminder Set"),
-            content: Text(
-                "Gym reminder set for: ${selectedDate.toLocal()} at ${selectedTime.format(context)}"),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-              ),
-            ],
-          ),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error setting reminder: $e'),
-        ));
-      }
+      final Timestamp reminderTimestamp =
+          Timestamp.fromDate(reminderDateTime.toUtc());
+
+      await FirebaseFirestore.instance
+          .collection('profiles')
+          .doc(user.uid)
+          .collection('gym_reminders')
+          .add({
+        'userId': user.uid,
+        'reminderTime': reminderTimestamp,
+        'token': token,
+      });
+
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Gym Reminder Set"),
+          content: Text(
+              "Gym reminder set for: ${reminderDateTime.toLocal().toString().split('.').first}"), // Updated line
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Error: No user logged in'),
@@ -114,25 +118,33 @@ class _GymReminderViewState extends State<GymReminderView> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebaseMessaging();
+  }
+
   void _initializeFirebaseMessaging() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    NotificationSettings settings = await messaging.requestPermission();
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      provisional: false,
+    );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       String? token = await messaging.getToken();
-      User? user = FirebaseAuth.instance.currentUser;
 
+      User? user = FirebaseAuth.instance.currentUser;
       if (token != null && user != null) {
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'token': token,
         }, SetOptions(merge: true));
       }
+    } else {
+      print('User declined or has not accepted permission');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeFirebaseMessaging();
   }
 }
