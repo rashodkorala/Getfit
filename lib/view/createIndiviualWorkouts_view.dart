@@ -206,29 +206,16 @@ class ExerciseTile extends StatefulWidget {
 }
 
 class _ExerciseTileState extends State<ExerciseTile> {
-  List<bool> _completedSets;
-
-  _ExerciseTileState() : _completedSets = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _completedSets =
-        List.generate(widget.exercise.sets.length, (index) => false);
-  }
-
   void _addSet() {
     setState(() {
       widget.exercise.sets.add(
           SetDetails(index: widget.exercise.sets.length, reps: 0, weight: 0));
-      _completedSets.add(false);
     });
   }
 
   void _removeSet(int index) {
     setState(() {
       widget.exercise.sets.removeAt(index);
-      _completedSets.removeAt(index);
     });
   }
 
@@ -241,10 +228,24 @@ class _ExerciseTileState extends State<ExerciseTile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.exercise.name,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.remove_circle_outline),
+                  onPressed: widget.onRemove,
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
             Text(
-              widget.exercise.name,
-              style:
-                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              widget.exercise.description,
+              style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 8.0),
             Table(
