@@ -51,6 +51,7 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
                           builder: (context) => ViewWorkoutPlanPage(
                                 workout: workout,
                                 isprebuilt: true,
+                                completedWorkout: false,
                               )),
                     );
                   },

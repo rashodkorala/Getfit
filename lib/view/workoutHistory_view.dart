@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import '../controller/workoutService.dart';
+import 'package:getfit/controller/workoutcompletedService.dart';
 import '../model/workout_model.dart';
 import 'ViewWorkoutPlanPage.dart';
 import 'createWorkout_view.dart';
 
-class WorkoutListView extends StatefulWidget {
-  const WorkoutListView({Key? key}) : super(key: key);
+class WorkoutHistoryListView extends StatefulWidget {
+  const WorkoutHistoryListView({Key? key}) : super(key: key);
 
   @override
   _WorkoutListViewState createState() => _WorkoutListViewState();
 }
 
-class _WorkoutListViewState extends State<WorkoutListView> {
-  final WorkoutService _workoutService = WorkoutService();
+class _WorkoutListViewState extends State<WorkoutHistoryListView> {
+  final WorkoutcompletedService _workoutService = WorkoutcompletedService();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _WorkoutListViewState extends State<WorkoutListView> {
                         builder: (context) => ViewWorkoutPlanPage(
                           workout: workout,
                           isprebuilt: false,
-                          completedWorkout: false,
+                          completedWorkout: true,
                         ),
                       ),
                     );

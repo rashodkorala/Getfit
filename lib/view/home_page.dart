@@ -61,6 +61,12 @@ class HomePage extends StatelessWidget {
               },
               child: Text('View all exercises'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/viewworkouthistory');
+              },
+              child: Text('view workout history'),
+            ),
           ],
         ),
       ),

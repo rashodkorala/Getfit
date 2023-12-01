@@ -9,12 +9,14 @@ import 'workoutTracker_view.dart';
 class ViewWorkoutPlanPage extends StatelessWidget {
   final Workout workout;
   final bool isprebuilt;
+  final bool completedWorkout;
 
   final WorkoutService _workoutService = WorkoutService();
 
   ViewWorkoutPlanPage({
     required this.workout,
     required this.isprebuilt,
+    required this.completedWorkout,
   });
 
   @override
@@ -88,6 +90,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                     0: FlexColumnWidth(),
                     1: FlexColumnWidth(),
                     2: FlexColumnWidth(),
+                    3: FlexColumnWidth(),
                   },
                   children: [
                     const TableRow(
@@ -98,6 +101,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         Text('Reps',
                             style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(''),
                       ],
                     ),
                     ...exercise.sets.map((setDetail) {
@@ -115,9 +119,18 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: Text('${setDetail.reps} reps'),
                           ),
+                          Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Icon(
+                                completedWorkout == true ? Icons.check : null,
+                                color: setDetail.isCompleted == true
+                                    ? Colors.green
+                                    : Colors.grey,
+                              ))
                         ],
                       );
-                    }),
+                    }).toList(),
                   ],
                 ),
               ],

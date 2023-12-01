@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:getfit/controller/workoutcompletedService.dart';
 import 'dart:async';
 
 import 'package:getfit/model/workout_model.dart';
@@ -8,7 +11,7 @@ import '../model/workoutExercise_model.dart';
 class WorkoutTrackerView extends StatefulWidget {
   final Workout workout;
 
-  const WorkoutTrackerView({Key? key, required this.workout}) : super(key: key);
+  const WorkoutTrackerView({super.key, required this.workout});
 
   @override
   _WorkoutTrackerViewState createState() => _WorkoutTrackerViewState();
@@ -17,15 +20,17 @@ class WorkoutTrackerView extends StatefulWidget {
 class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
   late Timer _timer;
   String durationpreformed = '';
-  Duration _duration = Duration();
+  Duration _duration = const Duration();
+
+  WorkoutcompletedService workoutcompletedService = WorkoutcompletedService();
 
   @override
   void initState() {
     super.initState();
     // Start the timer when the page is opened
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {
-        _duration = _duration + Duration(seconds: 1);
+        _duration = _duration + const Duration(seconds: 1);
       });
     });
   }
@@ -36,11 +41,21 @@ class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
     super.dispose();
   }
 
-  void _finishWorkout() {
-    // Logic to handle the end of a workout
-    durationpreformed = _formatDuration(_duration);
-    _timer.cancel(); // Stop the timer
-    Navigator.pop(context); // Go back to the previous screen
+  void _finishWorkout() async {
+    // Filter out only completed sets for each exercise
+
+    // Calculate the duration of the workout
+    var duration = _formatDuration(_duration);
+    widget.workout.duration = duration;
+
+    widget.workout.lastperformed = DateTime.now().toString();
+    // Update the workout in the database
+    try {
+      await workoutcompletedService.addWorkout(widget.workout);
+    } catch (e) {
+      print(e);
+    }
+    Navigator.pop(context);
   }
 
   String _formatDuration(Duration duration) {
@@ -72,18 +87,20 @@ class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
               children: [
                 Text(
                   'Workout Timer: ${_formatDuration(_duration)}',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 ElevatedButton(
                   onPressed: _finishWorkout,
-                  child: Text('Finish Workout'),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
+                  child: const Text('Finish Workout'),
                 ),
               ],
             ),
@@ -97,7 +114,7 @@ class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
 class ExerciseTile extends StatefulWidget {
   final workoutExercise exercise;
 
-  const ExerciseTile({Key? key, required this.exercise}) : super(key: key);
+  const ExerciseTile({super.key, required this.exercise});
 
   @override
   _ExerciseTileState createState() => _ExerciseTileState();
@@ -120,6 +137,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
       widget.exercise.sets.add(
           SetDetails(index: widget.exercise.sets.length, reps: 0, weight: 0));
       _completedSets.add(false);
+      
     });
   }
 
@@ -133,13 +151,14 @@ class _ExerciseTileState extends State<ExerciseTile> {
   void _toggleSetComplete(int index) {
     setState(() {
       _completedSets[index] = !_completedSets[index];
+      widget.exercise.sets[index].isCompleted = _completedSets[index];
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8.0),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -147,9 +166,10 @@ class _ExerciseTileState extends State<ExerciseTile> {
           children: [
             Text(
               widget.exercise.name,
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Table(
               columnWidths: const {
                 0: FlexColumnWidth(),
@@ -159,7 +179,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 4: IntrinsicColumnWidth(),
               },
               children: [
-                TableRow(
+                const TableRow(
                   children: [
                     Text('Set'),
                     Text('Weight'),
@@ -182,12 +202,12 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           initialValue: '${widget.exercise.sets[index].weight}',
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 8),
                           ),
-                          style: TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 14),
                         ),
                       ),
                       Padding(
@@ -196,12 +216,12 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           initialValue: '${widget.exercise.sets[index].reps}',
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             isDense: true,
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 8),
                           ),
-                          style: TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 14),
                         ),
                       ),
                       Checkbox(
@@ -211,7 +231,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.remove_circle_outline),
+                        icon: const Icon(Icons.remove_circle_outline),
                         onPressed: () => _removeSet(index),
                       ),
                     ],
@@ -221,8 +241,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
             ),
             TextButton(
               onPressed: _addSet,
-              child: Text('Add Set'),
-              style: TextButton.styleFrom(primary: Colors.blue),
+              style: TextButton.styleFrom(foregroundColor: Colors.blue),
+              child: const Text('Add Set'),
             ),
           ],
         ),

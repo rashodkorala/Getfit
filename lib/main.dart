@@ -13,6 +13,7 @@ import 'view/home_page.dart';
 import 'package:getfit/firebase_options.dart';
 
 import 'view/viewAllExersices.dart';
+import 'view/workoutHistory_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,12 +59,12 @@ class _MyAppState extends State<MyApp> {
               },
             ),
       routes: {
-
         '/signup': (context) => SignUpView(),
         '/forgotpassword': (context) => ForgotPasswordView(),
         '/viewworkout': (context) => WorkoutListView(),
         '/viewexercises': (context) => ExercisesPage(),
         '/prebuiltworkout': (context) => ChoosePrebuiltWorkoutPage(),
+        '/viewworkouthistory': (context) => WorkoutHistoryListView(),
       },
     );
   }
