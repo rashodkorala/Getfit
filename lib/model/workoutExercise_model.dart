@@ -1,28 +1,54 @@
 import 'package:getfit/model/exercise_model.dart';
 
 class workoutExercise extends Exercise {
-  List<SetDetails> sets;
+  late List<SetDetails> sets;
 
   workoutExercise({
-    required super.name,
-    required super.description,
+    required String bodyPart,
+    required String equipment,
+    required String gifUrl,
+    required String id,
+    required List<String> instructions,
+    required String name,
+    required List<String> secondaryMuscles,
+    required String target,
     required this.sets,
-  });
+  }) : super(
+          bodyPart: bodyPart,
+          equipment: equipment,
+          gifUrl: gifUrl,
+          id: id,
+          instructions: instructions,
+          name: name,
+          secondaryMuscles: secondaryMuscles,
+          target: target,
+        );
 
   @override
   Map<String, dynamic> toMap() {
     return {
+      'bodyPart': bodyPart,
+      'equipment': equipment,
+      'gifUrl': gifUrl,
+      'id': id,
+      'instructions': instructions.map((e) => '').toList(),
       'name': name,
-      'description': description,
-      'sets': sets.map((set) => set.toMap()).toList(),
+      'secondaryMuscles': secondaryMuscles.map((e) => '').toList(),
+      'target': target,
+      'sets': sets.map((e) => e.toMap()).toList(),
     };
   }
 
-  @override
   factory workoutExercise.fromMap(Map<String, dynamic> map) {
     return workoutExercise(
+      bodyPart: map['bodyPart'] ?? '',
+      equipment: map['equipment'] ?? '',
+      gifUrl: map['gifUrl'] ?? '',
+      id: map['id'] ?? '',
+      instructions: List<String>.from(map['instructions'] ?? const []),
       name: map['name'] ?? '',
-      description: map['description'] ?? '',
+      secondaryMuscles: List<String>.from(map['secondaryMuscles'] ?? const []),
+      target: map['target'] ?? '',
       sets: (map['sets'] as List).map((x) => SetDetails.fromMap(x)).toList(),
     );
   }
