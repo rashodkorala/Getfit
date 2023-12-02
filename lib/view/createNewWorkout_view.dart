@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
-import 'package:getfit/view/ViewWorkoutPlanPage.dart';
+import 'package:getfit/view/workout_view.dart';
 import '../controller/exerciesService.dart';
 import '../controller/workoutService.dart';
 import '../model/exercise_model.dart';

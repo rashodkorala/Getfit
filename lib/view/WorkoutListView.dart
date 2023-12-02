@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../controller/workoutService.dart';
 import '../model/workout_model.dart';
-import 'ViewWorkoutPlanPage.dart';
+import 'workout_view.dart';
 import 'CreateWorkoutOptions_view.dart';
 
 class WorkoutListView extends StatefulWidget {
