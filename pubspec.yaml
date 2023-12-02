@@ -28,5 +28,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/getfit-comp4768-4c8647cb206a.json
