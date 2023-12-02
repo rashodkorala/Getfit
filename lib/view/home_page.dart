@@ -6,6 +6,7 @@ import 'package:getfit/view/login_view.dart';
 import 'dart:io';
 import 'package:getfit/view/chatbot_screen.dart';
 import 'package:getfit/view/water_intake_page.dart';
+import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       //WorkoutPage(),
       //FoodIntakePage(),
       WaterIntakePage(),
-      //MealPlanPage(),
+      PersonalizedMealPlanQuestionnairePage(),
     ];
   }
 
@@ -102,6 +103,13 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => WaterIntakePage()),
+        );
+      }
+
+      if (index == 3) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PersonalizedMealPlanQuestionnairePage()),
         );
       }
     });
