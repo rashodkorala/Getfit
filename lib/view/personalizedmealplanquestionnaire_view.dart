@@ -95,7 +95,7 @@ class _PersonalizedMealPlanQuestionnairePageState
 
     // Create the prompt for the OpenAI API
     String prompt =
-        "Please create a personalized meal plan with the following details:\n" +
+        "Please create a personalized meal plan with the following details:, make the response easy to read, if there are multiple meal plans make the different titles bold for easier view and underline them\n" +
             userInputs.entries.map((e) => "- ${e.key}: ${e.value}").join('\n');
 
     try {
