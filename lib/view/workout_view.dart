@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workout_model.dart';
 import 'package:getfit/view/Exercise_view.dart';
+import 'package:getfit/view/WorkoutListView.dart';
 import 'createNewWorkout_view.dart';
 
 class ViewWorkoutPlanPage extends StatelessWidget {
@@ -40,7 +41,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                       isEditing: true,
                     ),
                   ),
-                );
+                ).then((value) => Navigator.pop(context));
               },
             ),
         ],
@@ -212,8 +213,11 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Workout deleted')),
                   );
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacementNamed(context, '/viewworkout');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WorkoutListView()),
+                  ).then((value) => Navigator.popUntil(
+                      context, (route) => '/' == route.settings.name));
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Failed to delete workout')),
