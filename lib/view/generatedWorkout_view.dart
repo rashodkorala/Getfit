@@ -6,10 +6,10 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 // import 'package:printing/printing.dart';
 
-class generatedWorkoutView extends StatelessWidget {
+class GeneratedWorkoutView extends StatelessWidget {
   final String workoutPlan;
 
-  const generatedWorkoutView({Key? key, required this.workoutPlan})
+  const GeneratedWorkoutView({Key? key, required this.workoutPlan})
       : super(key: key);
 
   Future<void> generateAndSavePdf(BuildContext context) async {
