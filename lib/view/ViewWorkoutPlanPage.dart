@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workout_model.dart';
+import 'package:getfit/view/Exercise_view.dart';
 import 'createIndiviualWorkouts_view.dart';
 
 class ViewWorkoutPlanPage extends StatelessWidget {
@@ -50,13 +51,13 @@ class ViewWorkoutPlanPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('${workout.name}',
+            Text(capitalizeFirstLetterOfEachWord(workout.name),
                 style:
                     const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             Text(' Created on: ${formatDate(workout.creationDate)}',
                 style: TextStyle(color: Colors.grey[600])),
             const SizedBox(height: 16),
-            _buildExerciseList(),
+            _buildExerciseList(context),
             if (isprebuilt) _createWorkoutButton(context),
             _startWorkoutButton(context),
           ],
@@ -65,23 +66,39 @@ class ViewWorkoutPlanPage extends StatelessWidget {
     );
   }
 
-  Widget _buildExerciseList() {
+  Widget _buildExerciseList(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: workout.exercises.map((exercise) {
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 9.0),
           child: Padding(
-            padding: const EdgeInsets.all(9.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  exercise.name,
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w500),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(capitalizeFirstLetterOfEachWord(exercise.name),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text('${exercise.sets.length} sets',
+                        style: const TextStyle(color: Colors.grey)),
+                    IconButton(
+                        onPressed: () {
+                          showExerciseDialog(context, exercise);
+                        },
+                        icon: const Icon(
+                          Icons.question_mark,
+                          size: 20,
+                        ))
+                  ],
                 ),
-                const SizedBox(height: 4),
+                Text(capitalizeFirstLetterOfEachWord(exercise.bodyPart),
+                    style: const TextStyle(color: Colors.grey)),
+                const SizedBox(height: 20),
                 Table(
                   columnWidths: const {
                     0: FlexColumnWidth(),
@@ -93,7 +110,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                       children: [
                         Text('Set',
                             style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Weight',
+                        Text('Weight (lb)',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         Text('Reps',
                             style: TextStyle(fontWeight: FontWeight.bold)),
@@ -112,7 +129,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.reps} reps'),
+                            child: Text('${setDetail.reps} '),
                           ),
                         ],
                       );
@@ -203,4 +220,14 @@ class ViewWorkoutPlanPage extends StatelessWidget {
   String formatDate(DateTime date) {
     return '${date.year}-${date.month}-${date.day}';
   }
+}
+
+String capitalizeFirstLetterOfEachWord(String text) {
+  if (text.isEmpty) return text;
+  return text.split(" ").map((word) {
+    if (word.isNotEmpty) {
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }
+    return word;
+  }).join(" ");
 }

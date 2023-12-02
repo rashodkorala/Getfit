@@ -278,10 +278,9 @@ class _ExerciseTileState extends State<ExerciseTile> {
                 const TableRow(
                   children: [
                     Text('Set'),
-                    Text('Weight'),
+                    Text('Weight (lb)'),
                     Text('Reps'),
-                    SizedBox
-                        .shrink(), // Placeholder for the remove button column
+                    SizedBox.shrink(),
                   ],
                 ),
                 ...List.generate(widget.exercise.sets.length, (index) {
@@ -299,8 +298,9 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           onChanged: (value) => setState(() {
+                            //handle error
                             widget.exercise.sets[index].weight =
-                                int.parse(value);
+                                value.isEmpty ? 0 : int.parse(value);
                           }),
                           decoration: const InputDecoration(
                             isDense: true,
@@ -318,7 +318,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           onChanged: (value) => setState(() {
-                            widget.exercise.sets[index].reps = int.parse(value);
+                            widget.exercise.sets[index].reps =
+                                value.isEmpty ? 0 : int.parse(value);
                           }),
                           decoration: const InputDecoration(
                             isDense: true,

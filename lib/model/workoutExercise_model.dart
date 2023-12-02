@@ -4,25 +4,16 @@ class workoutExercise extends Exercise {
   late List<SetDetails> sets;
 
   workoutExercise({
-    required String bodyPart,
-    required String equipment,
-    required String gifUrl,
-    required String id,
-    required List<String> instructions,
-    required String name,
-    required List<String> secondaryMuscles,
-    required String target,
+    required super.bodyPart,
+    required super.equipment,
+    required super.gifUrl,
+    required super.id,
+    required super.instructions,
+    required super.name,
+    required super.secondaryMuscles,
+    required super.target,
     required this.sets,
-  }) : super(
-          bodyPart: bodyPart,
-          equipment: equipment,
-          gifUrl: gifUrl,
-          id: id,
-          instructions: instructions,
-          name: name,
-          secondaryMuscles: secondaryMuscles,
-          target: target,
-        );
+  });
 
   @override
   Map<String, dynamic> toMap() {
