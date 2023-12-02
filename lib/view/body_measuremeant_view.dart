@@ -34,8 +34,7 @@ class _BodyMeasurementViewState extends State<BodyMeasurementView> {
           SnackBar(content: Text('Measurements saved successfully!')));
 
       // Navigate back to the HomePage
-      Navigator.of(context).popUntil(
-          (route) => route.isFirst); // This assumes HomePage is the first route
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('You are not logged in.')));

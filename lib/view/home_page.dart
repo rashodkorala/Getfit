@@ -54,7 +54,6 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Input Body Measurements'),
             ),
-            // ... Add other buttons or widgets here as needed ...
           ],
         ),
       ),
