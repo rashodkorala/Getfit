@@ -24,15 +24,16 @@ class workoutExercise extends Exercise {
           target: target,
         );
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'bodyPart': bodyPart,
       'equipment': equipment,
       'gifUrl': gifUrl,
       'id': id,
-      'instructions': instructions.map((e) => null).toList(),
+      'instructions': instructions.map((e) => '').toList(),
       'name': name,
-      'secondaryMuscles': secondaryMuscles.map((e) => null).toList(),
+      'secondaryMuscles': secondaryMuscles.map((e) => '').toList(),
       'target': target,
       'sets': sets.map((e) => e.toMap()).toList(),
     };
@@ -48,9 +49,7 @@ class workoutExercise extends Exercise {
       name: map['name'] ?? '',
       secondaryMuscles: List<String>.from(map['secondaryMuscles'] ?? const []),
       target: map['target'] ?? '',
-      sets: List<SetDetails>.from(map['sets'] ?? const [])
-          .map((e) => SetDetails.fromMap(e as Map<String, dynamic>))
-          .toList(),
+      sets: (map['sets'] as List).map((x) => SetDetails.fromMap(x)).toList(),
     );
   }
 }
