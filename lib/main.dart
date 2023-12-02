@@ -12,8 +12,6 @@ import 'view/forgot_password_view.dart';
 import 'view/home_page.dart';
 import 'package:getfit/firebase_options.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -44,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Get Fit',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blue,
       ),
       darkTheme: ThemeData.dark(),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
@@ -58,7 +56,6 @@ class _MyAppState extends State<MyApp> {
               },
             ),
       routes: {
-
         '/signup': (context) => SignUpView(),
         '/forgotpassword': (context) => ForgotPasswordView(),
         '/viewworkout': (context) => WorkoutListView(),

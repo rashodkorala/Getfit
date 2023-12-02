@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../controller/workoutService.dart';
 import '../model/workout_model.dart';
 import 'ViewWorkoutPlanPage.dart';
-import 'createWorkout_view.dart';
+import 'CreateWorkoutOptions_view.dart';
 
 class WorkoutListView extends StatefulWidget {
   const WorkoutListView({Key? key}) : super(key: key);
@@ -105,7 +106,7 @@ class _WorkoutListViewState extends State<WorkoutListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showCreateWorkoutPlanBottomSheet(context);
+          showCreateWorkoutPlan(context);
         },
         child: const Icon(Icons.add),
       ),
@@ -117,11 +118,11 @@ class _WorkoutListViewState extends State<WorkoutListView> {
   }
 }
 
-void showCreateWorkoutPlanBottomSheet(BuildContext context) {
-  showModalBottomSheet(
+void showCreateWorkoutPlan(BuildContext context) {
+  showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return CreateWorkoutPlanBottomSheet();
+    builder: (context) {
+      return const CreateWorkoutOptions();
     },
   );
 }
