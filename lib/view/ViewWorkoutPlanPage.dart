@@ -51,14 +51,21 @@ class ViewWorkoutPlanPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(capitalizeFirstLetterOfEachWord(workout.name),
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  workout.name,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                if (isprebuilt) _createWorkoutButton(context),
+              ],
+            ),
             Text(' Created on: ${formatDate(workout.creationDate)}',
                 style: TextStyle(color: Colors.grey[600])),
             const SizedBox(height: 16),
             _buildExerciseList(context),
-            if (isprebuilt) _createWorkoutButton(context),
             _startWorkoutButton(context),
           ],
         ),
@@ -159,9 +166,12 @@ class ViewWorkoutPlanPage extends StatelessWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
       ),
-      child: const Text('Create a Workout Plan'),
+      child: const Text('Use This Template'),
     );
   }
 
