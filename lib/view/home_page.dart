@@ -74,7 +74,7 @@ Future<List<Map<String, dynamic>>> readJsonData() async {
 
 Future<void> uploadDataToFirestore(List<Map<String, dynamic>> data) async {
   final firestoreInstance = FirebaseFirestore.instance;
-  final collectionRef = firestoreInstance.collection('my_collection');
+  final collectionRef = firestoreInstance.collection('exercises');
 
   for (var item in data) {
     await collectionRef.add(item).catchError((e) {
