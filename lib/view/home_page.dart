@@ -5,6 +5,7 @@ import 'package:getfit/view/settings_view.dart';
 import 'package:getfit/view/login_view.dart';
 import 'dart:io';
 import 'package:getfit/view/chatbot_screen.dart';
+import 'package:getfit/view/water_intake_page.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -23,6 +24,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     fetchUserProfile();
+
+    _pages = [
+      //WorkoutPage(),
+      //FoodIntakePage(),
+      WaterIntakePage(),
+      //MealPlanPage(),
+    ];
   }
 
   Future<void> fetchUserProfile() async {
@@ -36,6 +44,7 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
+
 
   void navigateToSettings(BuildContext context) async {
     final selectedPicture = await Navigator.push(
@@ -79,6 +88,23 @@ class _HomePageState extends State<HomePage> {
         builder: (context) => ChatPage(currentUser: widget.currentUser),
       ),
     );
+  }
+
+  int _currentIndex = 0;
+  late List<Widget> _pages;
+
+
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+      if (index == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WaterIntakePage()),
+        );
+      }
+    });
   }
 
   @override
@@ -175,6 +201,31 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: onTabTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fitness_center),
+            label: 'Workout',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_drink),
+            label: 'Water Intake',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood),
+            label: 'Food Intake',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant_menu),
+            label: 'Meal Plans',
+          ),
+        ],
       ),
     );
   }
