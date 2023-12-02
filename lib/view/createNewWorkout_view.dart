@@ -76,23 +76,23 @@ class _CreateIndividualWorkoutPageState
     );
 
     try {
-      // if (widget.isEditing == true) {
-      //   // Update existing workout
-      //   await _workoutService.updateWorkout(widget.workout!.id, newWorkout);
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(content: Text('Workout updated successfully!')),
-      //   );
-      // } else {
-      //   // Save new workout
-      //   if (widget.destination == 'prebuilt') {
-      //     await _prebuiltWorkoutService.addPrebuiltWorkout(newWorkout);
-      //   } else {
-      //     await _workoutService.addWorkout(newWorkout);
-      //   }
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     const SnackBar(content: Text('Workout saved successfully!')),
-      //   );
-      // }
+      if (widget.isEditing == true) {
+        // Update existing workout
+        await _workoutService.updateWorkout(widget.workout!.id, newWorkout);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Workout updated successfully!')),
+        );
+      } else {
+        // Save new workout
+        if (widget.destination == 'prebuilt') {
+          await _prebuiltWorkoutService.addPrebuiltWorkout(newWorkout);
+        } else {
+          await _workoutService.addWorkout(newWorkout);
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Workout saved successfully!')),
+        );
+      }
       Navigator.push(
         context,
         MaterialPageRoute(
