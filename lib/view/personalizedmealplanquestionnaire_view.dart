@@ -21,10 +21,11 @@ class _PersonalizedMealPlanQuestionnairePageState
     'What is your weight goal?',
     'How many meals do you prefer per day?',
     'Do you have any food allergies?',
+    'How many meal plans do you want?',
   ];
 
   List<TextEditingController> questionControllers = List.generate(
-    8,
+    9,
     (index) => TextEditingController(),
   );
 
