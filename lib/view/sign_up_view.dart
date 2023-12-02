@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:getfit/view/login_view.dart';
 
 class SignUpView extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -13,7 +14,8 @@ class SignUpView extends StatelessWidget {
       );
       User? user = authResult.user;
       if (user != null) {
-        Navigator.of(context).pushReplacementNamed('/signin');
+        Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => LoginView()));
       } else {
       }
     } catch (error) {
