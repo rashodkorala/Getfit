@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
@@ -44,7 +42,7 @@ class _CreateIndividualWorkoutPageState
   }
 
   void _initializePage() {
-    if (widget.workout != null && widget.isEditing == true) {
+    if (widget.workout != null || widget.isEditing == true) {
       workoutNameController.text = widget.workout!.name;
       selectedExercises = widget.workout!.exercises;
     }

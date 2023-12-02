@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/view/ViewWorkoutPlanPage.dart';
+import 'package:getfit/view/createIndiviualWorkouts_view.dart';
 import '../model/workout_model.dart';
-import 'createIndiviualWorkouts_view.dart';
 
 class ChoosePrebuiltWorkoutPage extends StatefulWidget {
   @override
@@ -25,7 +25,22 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Prebuilt Workout Plans'),
-        
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add new workout plan',
+            onPressed: () {
+              // Navigate to the CreateIndividualWorkoutPage when the user taps the button
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateIndividualWorkoutPage(
+                          destination: 'prebuilt',
+                        )),
+              );
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<Workout>>(
         future: _prebuiltWorkoutService.getPrebuiltWorkouts(),
