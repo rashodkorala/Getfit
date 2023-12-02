@@ -55,12 +55,6 @@ class HomePage extends StatelessWidget {
               },
               child: Text('View Workouts'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/viewexercises');
-              },
-              child: Text('View all exercises'),
-            ),
           ],
         ),
       ),
