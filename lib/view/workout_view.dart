@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
+import 'package:getfit/model/workoutExercise_model.dart';
 import 'package:getfit/model/workout_model.dart';
 import 'package:getfit/view/Exercise_view.dart';
 import 'package:getfit/view/WorkoutListView.dart';
@@ -71,8 +72,9 @@ class ViewWorkoutPlanPage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: workout.exercises.length,
                 itemBuilder: (context, index) {
-                  return _buildExerciseList(
+                  return _buildExerciseItem(
                     context,
+                    workout.exercises[index],
                   );
                 },
               ),
@@ -84,85 +86,82 @@ class ViewWorkoutPlanPage extends StatelessWidget {
     );
   }
 
-  Widget _buildExerciseList(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: workout.exercises.map((exercise) {
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 9.0),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildExerciseItem(BuildContext context, workoutExercise exercise) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 9.0),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                          capitalizeFirstLetterOfEachWord(exercise.name),
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          showExerciseDialog(context, exercise);
-                        },
-                        icon: const Icon(
-                          Icons.question_mark,
-                          size: 18,
-                        )),
-                    Text('${exercise.sets.length} sets',
-                        style: const TextStyle(color: Colors.grey)),
-                  ],
+                Flexible(
+                  child: Text(
+                    capitalizeFirstLetterOfEachWord(exercise.name),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow
+                        .visible, // Allow text to wrap to the next line
+                    softWrap: true, // Enable text wrapping
+                  ),
                 ),
-                Text(capitalizeFirstLetterOfEachWord(exercise.bodyPart),
+                IconButton(
+                    onPressed: () {
+                      showExerciseDialog(context, exercise);
+                    },
+                    icon: const Icon(
+                      Icons.question_mark,
+                      size: 18,
+                    )),
+                Text('${exercise.sets.length} sets',
                     style: const TextStyle(color: Colors.grey)),
-                const SizedBox(height: 20),
-                Table(
-                  columnWidths: const {
-                    0: FlexColumnWidth(),
-                    1: FlexColumnWidth(),
-                    2: FlexColumnWidth(),
-                  },
-                  children: [
-                    const TableRow(
-                      children: [
-                        Text('Set',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Weight',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Reps',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    ...exercise.sets.map((setDetail) {
-                      return TableRow(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.index + 1}',
-                                style: const TextStyle(fontSize: 16)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.weight} lb'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.reps} '),
-                          ),
-                        ],
-                      );
-                    }),
-                  ],
-                ),
               ],
             ),
-          ),
-        );
-      }).toList(),
+            Text(capitalizeFirstLetterOfEachWord(exercise.bodyPart),
+                style: const TextStyle(color: Colors.grey)),
+            const SizedBox(height: 20),
+            Table(
+              columnWidths: const {
+                0: FlexColumnWidth(),
+                1: FlexColumnWidth(),
+                2: FlexColumnWidth(),
+              },
+              children: [
+                const TableRow(
+                  children: [
+                    Text('Set', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('Weight',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('Reps', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                ...exercise.sets.map((setDetail) {
+                  return TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text('${setDetail.index + 1}',
+                            style: const TextStyle(fontSize: 16)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text('${setDetail.weight} lb'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Text('${setDetail.reps}'),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
