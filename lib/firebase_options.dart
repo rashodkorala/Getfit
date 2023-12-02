@@ -66,7 +66,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '722960252437',
     projectId: 'getfit-comp4768',
     storageBucket: 'getfit-comp4768.appspot.com',
-    iosClientId: '722960252437-d1i8ucuivnt8qmbc4d6cpog3jbttggof.apps.googleusercontent.com',
+    iosClientId:
+        '722960252437-d1i8ucuivnt8qmbc4d6cpog3jbttggof.apps.googleusercontent.com',
     iosBundleId: 'com.example.getfit',
   );
 
@@ -76,7 +77,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '722960252437',
     projectId: 'getfit-comp4768',
     storageBucket: 'getfit-comp4768.appspot.com',
-    iosClientId: '722960252437-4ec8k8fketpoinng253v6vmautlito99.apps.googleusercontent.com',
+    iosClientId:
+        '722960252437-4ec8k8fketpoinng253v6vmautlito99.apps.googleusercontent.com',
     iosBundleId: 'com.example.getfit.RunnerTests',
   );
 }
