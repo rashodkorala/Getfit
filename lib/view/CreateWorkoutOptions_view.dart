@@ -61,6 +61,23 @@ class CreateWorkoutOptions extends StatelessWidget {
             child: const Text('Choose From A Template'),
           ),
         ),
+        IntrinsicWidth(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ThemeData().colorScheme.primary,
+              foregroundColor: ThemeData().colorScheme.onSecondary,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChoosePrebuiltWorkoutPage(),
+                ),
+              ).then((value) => Navigator.pop(context));
+            },
+            child: const Text('View All Exercises'),
+          ),
+        ),
       ],
     );
   }
