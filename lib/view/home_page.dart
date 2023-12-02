@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_view.dart';
+import 'statistics_view.dart'; // Ensure you have this file created for statistics.
 
 class HomePage extends StatelessWidget {
   final User? currentUser;
@@ -12,16 +13,17 @@ class HomePage extends StatelessWidget {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('userUID');
-
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          // Add dark mode toggle logic here if needed
-        },
-      )));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginView()));
     } catch (error) {
       print(error.toString());
     }
+  }
+
+  void navigateToStatistics(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => StatisticsView()));
   }
 
   @override
@@ -32,9 +34,7 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              signOut(context);
-            },
+            onPressed: () => signOut(context),
           ),
         ],
       ),
@@ -48,7 +48,11 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 20.0),
-
+            ElevatedButton(
+              onPressed: () => navigateToStatistics(context),
+              child: Text('View Statistics'),
+            ),
+            // Other buttons or widgets can be added here
           ],
         ),
       ),
