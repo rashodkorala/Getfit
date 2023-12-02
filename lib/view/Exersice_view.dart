@@ -21,23 +21,34 @@ void showExerciseDialog(BuildContext context, Exercise exercise) {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                child: Image.network(exercise.gifUrl,
-                    width: 100,
-                    height: 250,
-                    fit: BoxFit.fill,
-                    gaplessPlayback: true, loadingBuilder:
-                        (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  );
-                }),
+                child: SizedBox(
+                  width: double.infinity, // Full width
+                  height: 250, // Fixed height
+                  child: Image.network(
+                    exercise.gifUrl,
+                    fit: BoxFit.cover, // Adjust the fit as needed
+                    gaplessPlayback: true,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      return Center(
+                        child: Text('No image found',
+                            style: TextStyle(fontSize: 16)),
+                      );
+                    },
+                  ),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(16.0),
