@@ -15,6 +15,7 @@ class Workout {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'creationDate': creationDate,
       'exercises': exercises.map((x) => x.toMap()).toList(),

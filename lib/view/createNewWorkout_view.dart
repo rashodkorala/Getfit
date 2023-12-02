@@ -72,6 +72,7 @@ class _CreateIndividualWorkoutPageState
     }
 
     Workout newWorkout = Workout(
+      id: widget.workout?.id ?? '',
       name: workoutName,
       exercises: selectedExercises,
       creationDate: DateTime.now(),
@@ -80,6 +81,8 @@ class _CreateIndividualWorkoutPageState
     try {
       if (widget.isEditing == true) {
         // Update existing workout
+        print('Workout ID: ${widget.workout?.id}');
+
         await _workoutService.updateWorkout(widget.workout!.id, newWorkout);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Workout updated successfully!')),

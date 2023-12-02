@@ -66,7 +66,17 @@ class ViewWorkoutPlanPage extends StatelessWidget {
             Text(' Created on: ${formatDate(workout.creationDate)}',
                 style: TextStyle(color: Colors.grey[600])),
             const SizedBox(height: 16),
-            _buildExerciseList(context),
+            Expanded(
+              // Makes sure the ListView only occupies the available space
+              child: ListView.builder(
+                itemCount: workout.exercises.length,
+                itemBuilder: (context, index) {
+                  return _buildExerciseList(
+                    context,
+                  );
+                },
+              ),
+            ),
             _startWorkoutButton(context),
           ],
         ),
@@ -89,19 +99,22 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(capitalizeFirstLetterOfEachWord(exercise.name),
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text('${exercise.sets.length} sets',
-                        style: const TextStyle(color: Colors.grey)),
+                    Flexible(
+                      child: Text(
+                          capitalizeFirstLetterOfEachWord(exercise.name),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                    ),
                     IconButton(
                         onPressed: () {
                           showExerciseDialog(context, exercise);
                         },
                         icon: const Icon(
                           Icons.question_mark,
-                          size: 20,
-                        ))
+                          size: 18,
+                        )),
+                    Text('${exercise.sets.length} sets',
+                        style: const TextStyle(color: Colors.grey)),
                   ],
                 ),
                 Text(capitalizeFirstLetterOfEachWord(exercise.bodyPart),
@@ -118,7 +131,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                       children: [
                         Text('Set',
                             style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Weight (lb)',
+                        Text('Weight',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         Text('Reps',
                             style: TextStyle(fontWeight: FontWeight.bold)),
@@ -129,11 +142,12 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.index + 1}'),
+                            child: Text('${setDetail.index + 1}',
+                                style: const TextStyle(fontSize: 16)),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${setDetail.weight}'),
+                            child: Text('${setDetail.weight} lb'),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -166,11 +180,9 @@ class ViewWorkoutPlanPage extends StatelessWidget {
         );
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+        minimumSize: const Size(200, 40),
+        backgroundColor: ThemeData().colorScheme.primary,
+        foregroundColor: ThemeData().colorScheme.onSecondary,
       ),
       child: const Text('Use This Template'),
     );
@@ -182,11 +194,9 @@ class ViewWorkoutPlanPage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0), // Rounded edges
-          ),
+          minimumSize: const Size(200, 40),
+          backgroundColor: ThemeData().colorScheme.primary,
+          foregroundColor: ThemeData().colorScheme.onSecondary,
         ),
         child: const Text('Start Workout'),
       ),
