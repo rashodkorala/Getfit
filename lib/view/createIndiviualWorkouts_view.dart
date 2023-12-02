@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
@@ -5,6 +7,7 @@ import '../controller/exerciesService.dart';
 import '../controller/workoutService.dart';
 import '../model/exercise_model.dart';
 import '../model/workout_model.dart';
+import 'Exercise_view.dart';
 
 class CreateIndividualWorkoutPage extends StatefulWidget {
   final String destination;
@@ -228,7 +231,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(12.0),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -238,22 +241,34 @@ class _ExerciseTileState extends State<ExerciseTile> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.exercise.name,
+                  capitalizeFirstLetterOfEachWord(widget.exercise.name),
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w500),
+                      fontSize: 18, fontWeight: FontWeight.w500),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () {
+                      showExerciseDialog(context, widget.exercise);
+                    },
+                    icon: const Icon(
+                      Icons.question_mark,
+                      size: 20,
+                    )),
+                IconButton(
+                  icon: const Icon(Icons.remove_circle_outline, size: 20),
                   onPressed: widget.onRemove,
                 ),
               ],
             ),
-            const SizedBox(height: 4),
             Text(
-              widget.exercise.instructions.join('\n\n'),
-              style: const TextStyle(fontSize: 14),
+              capitalizeFirstLetterOfEachWord(widget.exercise.bodyPart),
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
+              ),
             ),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 25.0),
             Table(
               columnWidths: const {
                 0: FlexColumnWidth(),
@@ -281,7 +296,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: TextFormField(
-                          initialValue: '${widget.exercise.sets[index].weight}',
+                          initialValue:
+                              '${widget.exercise.sets[index].weight == 0 ? '' : widget.exercise.sets[index].weight}',
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           onChanged: (value) => setState(() {
@@ -299,7 +315,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: TextFormField(
-                          initialValue: '${widget.exercise.sets[index].reps}',
+                          initialValue:
+                              '${widget.exercise.sets[index].reps == 0 ? '' : widget.exercise.sets[index].reps}',
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           onChanged: (value) => setState(() {
@@ -332,4 +349,14 @@ class _ExerciseTileState extends State<ExerciseTile> {
       ),
     );
   }
+}
+
+String capitalizeFirstLetterOfEachWord(String text) {
+  if (text.isEmpty) return text;
+  return text.split(" ").map((word) {
+    if (word.isNotEmpty) {
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }
+    return word;
+  }).join(" ");
 }

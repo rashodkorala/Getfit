@@ -4,7 +4,7 @@ import '../model/exercise_model.dart';
 
 class ExcersiceService {
   final CollectionReference _exercisesCollection =
-      FirebaseFirestore.instance.collection('exercises');
+      FirebaseFirestore.instance.collection('my_collection');
 
   Future<List<Exercise>> getExercises() async {
     try {
