@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'view/add_meal.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,10 +10,21 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'Meal Tracker',
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('Main Page'),
+        ),
         body: Center(
-          child: Text('Hello World!'),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AddMealScreen()),
+              );
+            },
+            child: Text('Add Meal'),
+          ),
         ),
       ),
     );
