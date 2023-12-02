@@ -172,8 +172,14 @@ class _CreateIndividualWorkoutPageState
                     setState(() {
                       selectedExercises.add(
                         workoutExercise(
+                          bodyPart: exercise.bodyPart,
+                          equipment: exercise.equipment,
+                          gifUrl: exercise.gifUrl,
+                          id: exercise.id,
+                          instructions: exercise.instructions,
                           name: exercise.name,
-                          description: exercise.description,
+                          secondaryMuscles: exercise.secondaryMuscles,
+                          target: exercise.target,
                           sets: [],
                         ),
                       );
@@ -244,7 +250,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
             ),
             const SizedBox(height: 4),
             Text(
-              widget.exercise.description,
+              widget.exercise.instructions.join('\n\n'),
               style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 8.0),
