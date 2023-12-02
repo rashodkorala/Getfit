@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workout_model.dart';
 import 'package:getfit/view/Exercise_view.dart';
-import 'createIndiviualWorkouts_view.dart';
+import 'createNewWorkout_view.dart';
 
 class ViewWorkoutPlanPage extends StatelessWidget {
   final Workout workout;

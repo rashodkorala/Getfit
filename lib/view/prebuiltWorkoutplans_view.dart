@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/view/ViewWorkoutPlanPage.dart';
-import 'package:getfit/view/createIndiviualWorkouts_view.dart';
+import 'package:getfit/view/createNewWorkout_view.dart';
 import '../model/workout_model.dart';
 
 class ChoosePrebuiltWorkoutPage extends StatefulWidget {
