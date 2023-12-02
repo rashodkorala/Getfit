@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getfit/view/viewAllExercises_view.dart';
 
 import 'createIndiviualWorkouts_view.dart';
 import 'prebuiltWorkoutplans_view.dart';
@@ -71,7 +72,7 @@ class CreateWorkoutOptions extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChoosePrebuiltWorkoutPage(),
+                  builder: (context) => ViewAllExercises(),
                 ),
               ).then((value) => Navigator.pop(context));
             },

@@ -4,12 +4,12 @@ import 'package:getfit/view/Exercise_view.dart';
 import '../controller/exerciesService.dart';
 import '../model/exercise_model.dart';
 
-class ExercisesPage extends StatefulWidget {
+class ViewAllExercises extends StatefulWidget {
   @override
   _ExercisesPageState createState() => _ExercisesPageState();
 }
 
-class _ExercisesPageState extends State<ExercisesPage> {
+class _ExercisesPageState extends State<ViewAllExercises> {
   final ExcersiceService _exerciseService = ExcersiceService();
 
   @override
