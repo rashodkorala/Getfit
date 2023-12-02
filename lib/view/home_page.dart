@@ -51,12 +51,6 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/viewworkout');
-              },
-              child: Text('View Workouts'),
-            ),
-            ElevatedButton(
-              onPressed: () {
                 Navigator.of(context).pushNamed('/viewexercises');
               },
               child: Text('View all exercises'),
