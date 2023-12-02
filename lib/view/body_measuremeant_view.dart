@@ -21,14 +21,16 @@ class _BodyMeasurementViewState extends State<BodyMeasurementView> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && !user.isAnonymous) {
       final measurements = {
-        for (var entry in _controllers.entries) entry.key: entry.value.text
+        for (var entry in _controllers.entries) entry.key: entry.value.text,
+        'timestamp': FieldValue
+            .serverTimestamp(), // Add a timestamp, will be used to pull latest data
       };
 
       await FirebaseFirestore.instance
           .collection('profiles')
           .doc(user.uid)
           .collection('measurements')
-          .add(measurements); // Save the measurements to Firestore
+          .add(measurements); // Save the measurements with a timestamp
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Measurements saved successfully!')));
