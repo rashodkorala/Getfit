@@ -6,17 +6,20 @@ import 'package:getfit/model/workoutExercise_model.dart';
 import 'package:getfit/model/workout_model.dart';
 import 'package:getfit/view/Exercise_view.dart';
 import 'package:getfit/view/WorkoutListView.dart';
+import 'package:getfit/view/workoutTracker_view.dart';
 import 'createNewWorkout_view.dart';
 
 class ViewWorkoutPlanPage extends StatelessWidget {
   final Workout workout;
   final bool isprebuilt;
+  final bool completedWorkout;
 
   final WorkoutService _workoutService = WorkoutService();
 
   ViewWorkoutPlanPage({
     required this.workout,
     required this.isprebuilt,
+    this.completedWorkout = false,
   });
 
   @override
@@ -24,12 +27,12 @@ class ViewWorkoutPlanPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          if (!isprebuilt)
+          if (!isprebuilt && !completedWorkout)
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () => _confirmDelete(context),
             ),
-          if (!isprebuilt)
+          if (!isprebuilt && !completedWorkout)
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
@@ -79,7 +82,7 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                 },
               ),
             ),
-            _startWorkoutButton(context),
+            if (!completedWorkout) _startWorkoutButton(context),
           ],
         ),
       ),
@@ -191,7 +194,16 @@ class ViewWorkoutPlanPage extends StatelessWidget {
     return Center(
       // Wrap the ElevatedButton with a Center widget
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WorkoutTrackerView(
+                workout: workout,
+              ),
+            ),
+          ).then((value) => Navigator.pop(context));
+        },
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(200, 40),
           backgroundColor: ThemeData().colorScheme.primary,

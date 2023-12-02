@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getfit/view/workoutHistory_view.dart';
 import '../controller/workoutService.dart';
 import '../model/workout_model.dart';
 import 'workout_view.dart';
@@ -39,6 +40,19 @@ class _WorkoutListViewState extends State<WorkoutListView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Workout Plans'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WorkoutHistoryListView(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<Workout>>(
         future: _workoutService.getWorkouts(),
