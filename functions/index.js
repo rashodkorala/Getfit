@@ -9,7 +9,7 @@ exports.checkAndSendReminders = functions.pubsub.schedule("every 1 minutes")
       const profilesSnapshot = await admin.firestore().collection(
           "profiles").get();
 
-      // Using for...of loop instead of forEach for proper async/await handling
+      // Using for loop for proper async/await handling
       for (const profileDoc of profilesSnapshot.docs) {
         const remindersSnapshot = await profileDoc.ref.collection(
             "gym_reminders")
