@@ -26,7 +26,7 @@ void showExerciseDialog(BuildContext context, Exercise exercise) {
                   height: 250, // Fixed height
                   child: Image.network(
                     exercise.gifUrl,
-                    fit: BoxFit.cover, // Adjust the fit as needed
+                    fit: BoxFit.fill, // Adjust the fit as needed
                     gaplessPlayback: true,
                     loadingBuilder: (BuildContext context, Widget child,
                         ImageChunkEvent? loadingProgress) {
