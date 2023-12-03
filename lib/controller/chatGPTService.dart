@@ -18,6 +18,8 @@ class ChatGPTService {
         body: jsonEncode({
           'prompt': prompt,
           'max_tokens': 3000, // Adjust the token limit as needed
+          'temperature': 0.7, // Adjust as needed
+          // Add other parameters if required
         }),
       );
 

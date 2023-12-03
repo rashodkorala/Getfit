@@ -39,13 +39,9 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
         currentStep: currentStep,
         onStepContinue: () async {
           if (validateCurrentStep()) {
-            setState(() {
-              if (currentStep < questions.length - 1) {
-                currentStep += 1;
-              }
-            });
             if (currentStep == questions.length - 1) {
               String workoutPlanPrompt = processUserAnswers();
+              print('Workout plan prompt: $workoutPlanPrompt');
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -56,6 +52,14 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
               ).then((value) => Navigator.pop(context));
             }
           }
+
+          setState(() {
+            if (currentStep < questions.length - 1) {
+              currentStep += 1;
+              print('Current step: $currentStep');
+              print('Questions length: ${questions.length}');
+            }
+          });
         },
         onStepCancel: () {
           // Move to the previous step
@@ -193,7 +197,7 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
     });
 
     prompt +=
-        "\nCan you create a personalized workout plan based on these details and the user's goals and can you also include the number of sets and reps for each exercise? Could also style the workout plan to make it look nice.";
+        "\nBased on the above details, please create a personalized workout plan with the number of sets and reps for each exercise. Format the plan in Markdown into a table format, with the exercise name, number of sets, and number of reps in each row. create a table for each day ";
 
     return prompt;
   }

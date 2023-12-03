@@ -17,6 +17,9 @@ dependencies:
   cloud_firestore: ^4.13.3
   pdf: ^3.10.6
   path_provider: ^2.1.1
+  flutter_markdown: ^0.6.18+2
+  markdown: ^7.1.1
+  printing: ^5.11.1
 
 dev_dependencies:
   flutter_test:

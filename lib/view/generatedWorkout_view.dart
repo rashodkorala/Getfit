@@ -1,14 +1,11 @@
-// ignore_for_file: use_super_parameters, avoid_print
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-// import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
-
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../controller/chatGPTService.dart';
-// import 'package:printing/printing.dart';
+import 'package:markdown/markdown.dart' as md;
 
 class GeneratedWorkoutView extends StatelessWidget {
   final Future<String> workoutPlanFuture;
@@ -23,8 +20,7 @@ class GeneratedWorkoutView extends StatelessWidget {
       pw.Page(
         build: (pw.Context context) {
           return pw.Center(
-            child:
-                pw.Text(workoutPlan, style: const pw.TextStyle(fontSize: 16)),
+            child: pw.Text(markdownToHtml(workoutPlan)),
           );
         },
       ),
@@ -32,8 +28,11 @@ class GeneratedWorkoutView extends StatelessWidget {
 
     try {
       final dir = await getExternalStorageDirectory();
-      final file = File("${dir?.path}/WorkoutPlan1.pdf");
+      final file = File("${dir?.path}/WorkoutPlan.pdf");
       await file.writeAsBytes(await pdf.save());
+
+      saveMd(workoutPlan, 'WorkoutPlan');
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('PDF saved in ${file.path}')),
       );
@@ -55,17 +54,11 @@ class GeneratedWorkoutView extends StatelessWidget {
         future: workoutPlanFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingScreen();
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                snapshot.data!,
-                style: const TextStyle(fontSize: 16),
-              ),
-            );
+            return WorkoutPlanDisplay(workoutPlan: snapshot.data!);
           } else {
             return const Center(child: Text('No workout plan found.'));
           }
@@ -73,10 +66,8 @@ class GeneratedWorkoutView extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // ignore: unnecessary_null_comparison
-          if (workoutPlanFuture != null) {
-            var workoutPlan = await workoutPlanFuture;
-            // ignore: use_build_context_synchronously
+          var workoutPlan = await workoutPlanFuture;
+          if (workoutPlan != null) {
             generateAndSavePdf(context, workoutPlan);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -86,6 +77,39 @@ class GeneratedWorkoutView extends StatelessWidget {
         },
         tooltip: 'Save as PDF',
         child: const Icon(Icons.save),
+      ),
+    );
+  }
+
+  Widget _buildLoadingScreen() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 20),
+          Text('Generating your personalized workout plan...',
+              style: TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+}
+
+class WorkoutPlanDisplay extends StatelessWidget {
+  final String workoutPlan;
+
+  const WorkoutPlanDisplay({Key? key, required this.workoutPlan})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // The workoutPlan is expected to be in Markdown format
+    return Markdown(
+      data: workoutPlan,
+      padding: const EdgeInsets.all(16),
+      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+        p: const TextStyle(fontSize: 16),
       ),
     );
   }
@@ -101,4 +125,30 @@ Future<String> generateWorkoutPlan(String prompt) async {
   }
 
   return workoutPlan;
+}
+
+Widget _buildLoadingScreen() {
+  return const Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(),
+        SizedBox(height: 20),
+        Text('Generating your personalized workout plan...',
+            style: TextStyle(fontSize: 16)),
+      ],
+    ),
+  );
+}
+
+String markdownToHtml(String markdown) {
+  return md.markdownToHtml(markdown,
+      extensionSet: md.ExtensionSet.gitHubFlavored);
+}
+
+Future<File> saveMd(String markdownContent, String filename) async {
+  final directory = await getTemporaryDirectory();
+  print(directory); // or getTemporaryDirectory()
+  final file = File('${directory.path}/$filename.md');
+  return file.writeAsString(markdownContent);
 }
