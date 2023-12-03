@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:getfit/view/chatbot_screen.dart';
 import 'package:getfit/view/water_intake_page.dart';
 import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
+import 'package:getfit/view/WorkoutListView.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     fetchUserProfile();
 
     _pages = [
-      //WorkoutPage(),
+      WorkoutListView(),
       //FoodIntakePage(),
       WaterIntakePage(),
       PersonalizedMealPlanQuestionnairePage(),
@@ -99,6 +100,14 @@ class _HomePageState extends State<HomePage> {
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
+
+      if (index == 0) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WorkoutListView()),
+        );
+      }
+
       if (index == 1) {
         Navigator.push(
           context,
