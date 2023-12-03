@@ -58,6 +58,7 @@ class _MyAppState extends State<MyApp> {
       badge: true,
       sound: true,
       provisional: false,
+      
     );
 
     // If user granted permission, get the token
