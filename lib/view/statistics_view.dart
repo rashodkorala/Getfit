@@ -5,6 +5,8 @@ import 'package:getfit/model/user_statistics.dart';
 //import 'package:getfit/model/workout_completed.dart';
 
 class StatisticsView extends StatefulWidget {
+  const StatisticsView({super.key});
+
   @override
   _StatisticsViewState createState() => _StatisticsViewState();
 }
@@ -33,14 +35,14 @@ class _StatisticsViewState extends State<StatisticsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Statistics'),
+        title: const Text('Your Statistics'),
       ),
       body: _userStatistics == null || _workouts == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
-                  Text('Body Measurements:'),
+                  const Text('Body Measurements:'),
                   // Display user statistics here
                   Text('BMI: ${_userStatistics?.bmi?.toStringAsFixed(2)}'),
                   // Display workout details here

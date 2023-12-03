@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getfit/model/user_statistics.dart';
-//import 'models/workout_completed.dart';
+//import 'package:getfit/model/workout_completed.dart';
 
 class StatisticsController {
   Future<UserStatistics?> fetchLatestUserStatistics() async {

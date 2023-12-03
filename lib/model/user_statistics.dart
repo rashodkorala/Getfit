@@ -42,7 +42,6 @@ class UserStatistics {
   }
 }
 
-// models/workout_completed.dart
 class WorkoutCompleted {
   final String name;
   final double weight;
