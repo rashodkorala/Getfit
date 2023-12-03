@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:getfit/controller/chatGPTService.dart';
 
 import 'generatedWorkout_view.dart';
 
@@ -28,8 +27,6 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
     8,
     (index) => TextEditingController(),
   );
-  bool isLoading = false; // Variable to track loading state
-  bool isProcessingAnswers = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,67 +34,61 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
       appBar: AppBar(
         title: const Text('Personalized Plan Questionnaire'),
       ),
-      body: isLoading
-          ? _buildLoadingScreen()
-          : Stepper(
-              type: StepperType.vertical,
-              currentStep: currentStep,
-              onStepContinue: () async {
-                if (!isProcessingAnswers && validateCurrentStep()) {
-                  saveAnswer();
-                  setState(() {
-                    if (currentStep < questions.length - 1) {
-                      currentStep += 1;
-                    } else {
-                      isLoading = true;
-                      isProcessingAnswers = true; // Set the flag to true
-                    }
-                  });
-
-                  if (currentStep == questions.length - 1) {
-                    String workoutPlan = await processUserAnswers();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            GeneratedWorkoutView(workoutPlan: workoutPlan),
-                      ),
-                    ).then((value) => Navigator.pop(context));
-                  }
-                }
-              },
-              onStepCancel: () {
-                // Move to the previous step
-                setState(() {
-                  if (currentStep > 0) {
-                    currentStep -= 1;
-                  }
-                });
-              },
-              steps: List.generate(
-                questions.length,
-                (index) => Step(
-                  title: Text('Question ${index + 1}'),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(questions[index]),
-                      SizedBox(height: 4),
-                      TextFormField(
-                        controller: questionControllers[index],
-                        keyboardType: index == 0 || index == 1 || index == 2
-                            ? TextInputType.number
-                            : TextInputType.text,
-                        decoration: InputDecoration(
-                          hintText:
-                              'Example: ${getExampleForQuestion(questions[index])}',
-                        ),
-                      ),
-                    ],
+      body: Stepper(
+        type: StepperType.vertical,
+        currentStep: currentStep,
+        onStepContinue: () async {
+          if (validateCurrentStep()) {
+            setState(() {
+              if (currentStep < questions.length - 1) {
+                currentStep += 1;
+              }
+            });
+            if (currentStep == questions.length - 1) {
+              String workoutPlanPrompt = processUserAnswers();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GeneratedWorkoutView(
+                    workoutPlanFuture: generateWorkoutPlan(workoutPlanPrompt),
                   ),
                 ),
-              ),
+              ).then((value) => Navigator.pop(context));
+            }
+          }
+        },
+        onStepCancel: () {
+          // Move to the previous step
+          setState(() {
+            if (currentStep > 0) {
+              currentStep -= 1;
+            }
+          });
+        },
+        steps: List.generate(
+          questions.length,
+          (index) => Step(
+            title: Text('Question ${index + 1}'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(questions[index]),
+                SizedBox(height: 4),
+                TextFormField(
+                  controller: questionControllers[index],
+                  keyboardType: index == 0 || index == 1 || index == 2
+                      ? TextInputType.number
+                      : TextInputType.text,
+                  decoration: InputDecoration(
+                    hintText:
+                        'Example: ${getExampleForQuestion(questions[index])}',
+                  ),
+                ),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -148,7 +139,7 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
     print('Answer for question ${currentStep + 1}: $answer');
   }
 
-  Future<String> processUserAnswers() async {
+  String processUserAnswers() {
     Map<String, String> userAnswers = {};
 
     for (int i = 0; i < questionControllers.length; i++) {
@@ -159,32 +150,7 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
 
     String userPrompt = createPromptFromAnswers(userAnswers);
 
-    try {
-      String workoutPlan = await generateWorkoutPlan(userPrompt);
-
-      // Navigate to the generated workout view
-
-      // Reset isLoading and isProcessingAnswers after successful generation
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          isProcessingAnswers = false;
-        });
-      }
-
-      return workoutPlan;
-    } catch (e) {
-      print('Error in generating: $e');
-
-      // Handle the error, e.g., show a snackbar with an error message
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          isProcessingAnswers = false;
-        });
-      }
-      return '';
-    }
+    return userPrompt;
   }
 
   void showSnackbar(String message) {
@@ -230,17 +196,5 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
         "\nCan you create a personalized workout plan based on these details and the user's goals and can you also include the number of sets and reps for each exercise? Could also style the workout plan to make it look nice.";
 
     return prompt;
-  }
-
-  Future<String> generateWorkoutPlan(String prompt) async {
-    String workoutPlan;
-    try {
-      workoutPlan = await ChatGPTService().sendPromptToOpenAI(prompt);
-    } catch (e) {
-      print('Error in generating: $e');
-      rethrow;
-    }
-
-    return workoutPlan;
   }
 }
