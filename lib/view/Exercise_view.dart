@@ -23,10 +23,10 @@ void showExerciseDialog(BuildContext context, Exercise exercise) {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: SizedBox(
                   width: double.infinity, // Full width
-                  height: 250, // Fixed height
+                  height: 300, // Fixed height
                   child: Image.network(
                     exercise.gifUrl,
-                    fit: BoxFit.cover, // Adjust the fit as needed
+                    fit: BoxFit.fill, // Adjust the fit as needed
                     gaplessPlayback: true,
                     loadingBuilder: (BuildContext context, Widget child,
                         ImageChunkEvent? loadingProgress) {

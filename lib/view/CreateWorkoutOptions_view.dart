@@ -5,7 +5,6 @@ import 'package:getfit/view/workoutGeneratorQnA_view.dart';
 import 'createNewWorkout_view.dart';
 import 'prebuiltWorkoutplans_view.dart';
 
-
 class CreateWorkoutOptions extends StatelessWidget {
   const CreateWorkoutOptions({super.key});
 
