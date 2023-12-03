@@ -44,7 +44,7 @@ class _StatisticsViewState extends State<StatisticsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (_userStatistics != null) ...[
-                    const Text('Latest Measurements:'),
+                    const Text('Latest Measurements:\n'),
                     Text('Chest: ${_userStatistics!.chest} inches'),
                     Text('Waist: ${_userStatistics!.waist} inches'),
                     Text('Hips: ${_userStatistics!.hips} inches'),
@@ -53,7 +53,7 @@ class _StatisticsViewState extends State<StatisticsView> {
                     Text('Calf: ${_userStatistics!.calf} inches'),
                   ],
                   if (_workouts != null && _workouts!.isNotEmpty) ...[
-                    const Text('Latest Workout:'),
+                    const Text('Latest Workout:\n'),
                     for (var workout in _workouts!) ...[
                       Text('Name: ${workout.name}'),
                       Text('Weight: ${workout.weight} lbs'),

@@ -3,16 +3,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkoutCompleted {
-  final String name;
-  final double weight;
-  final int reps;
-  final DateTime timestamp;
+  final String? name;
+  final double? weight;
+  final int? reps;
+  final DateTime? creationDate;
 
   WorkoutCompleted({
     required this.name,
     required this.weight,
     required this.reps,
-    required this.timestamp,
+    required this.creationDate,
   });
 
   factory WorkoutCompleted.fromFirestore(Map<String, dynamic> data) {
@@ -20,7 +20,7 @@ class WorkoutCompleted {
       name: data['name'],
       weight: data['weight'],
       reps: data['reps'],
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      creationDate: (data['creationDate'] as Timestamp).toDate(),
     );
   }
 }

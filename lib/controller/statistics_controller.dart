@@ -1,4 +1,3 @@
-// Assuming this file is saved as statistics_controller.dart in the controllers directory
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getfit/model/user_statistics.dart';
@@ -32,12 +31,18 @@ class StatisticsController {
           .collection('profiles')
           .doc(user.uid)
           .collection('workoutcompleted')
-          .orderBy('timestamp', descending: true)
+          .orderBy('creationDate', descending: true)
           .get();
 
-      workouts = snapshot.docs
-          .map((doc) => WorkoutCompleted.fromFirestore(doc.data()))
-          .toList();
+      if (snapshot.docs.isNotEmpty) {
+        workouts = snapshot.docs
+            .map((doc) => WorkoutCompleted.fromFirestore(doc.data()))
+            .toList();
+      } else {
+        print('No workoutcompleted documents found for user: ${user.uid}');
+      }
+    } else {
+      print('User is not logged in.');
     }
     return workouts;
   }
