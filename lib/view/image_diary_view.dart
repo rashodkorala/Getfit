@@ -3,12 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ImageDiaryView extends StatefulWidget {
+  final User? currentUser;
+
+  ImageDiaryView({Key? key, this.currentUser}) : super(key: key);
+
   @override
-  _ImageDiaryViewState createState() => _ImageDiaryViewState();
+  _ImageDiaryViewState createState() => _ImageDiaryViewState(currentUser);
 }
 
 class _ImageDiaryViewState extends State<ImageDiaryView> {
-  final user = FirebaseAuth.instance.currentUser;
+  final User? currentUser;
+
+  _ImageDiaryViewState(this.currentUser);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class _ImageDiaryViewState extends State<ImageDiaryView> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('user_images')
-            .doc(user!.uid)
+            .doc(currentUser!.uid)
             .collection('images')
             .orderBy('uploadDate', descending: true)
             .snapshots(),
