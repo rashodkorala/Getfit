@@ -5,20 +5,26 @@ class Workout {
   String name;
   DateTime creationDate;
   List<workoutExercise> exercises;
+  String? lastperformed;
+  String? duration;
 
   Workout({
     this.id = '',
     required this.name,
     required this.creationDate,
     required this.exercises,
+    this.lastperformed,
+    this.duration,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+'id': id,
       'name': name,
       'creationDate': creationDate,
       'exercises': exercises.map((x) => x.toMap()).toList(),
+      'lastperformed': lastperformed ?? '',
+      'duration': duration ?? '',
     };
   }
 
@@ -29,6 +35,8 @@ class Workout {
       creationDate: map['creationDate'].toDate(),
       exercises: List<workoutExercise>.from(
           map['exercises']?.map((x) => workoutExercise.fromMap(x))),
+      lastperformed: map['lastperformed'] ?? '',
+      duration: map['duration'] ?? '',
     );
   }
 }

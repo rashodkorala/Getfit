@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/view/viewAllExercises_view.dart';
+import 'package:getfit/view/workoutGeneratorQnA_view.dart';
 
 import 'createNewWorkout_view.dart';
 import 'prebuiltWorkoutplans_view.dart';
@@ -41,7 +42,12 @@ class CreateWorkoutOptions extends StatelessWidget {
               foregroundColor: ThemeData().colorScheme.onSecondary,
             ),
             onPressed: () {
-              // Your personalized plan logic
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WorkoutGeneratorQnA(),
+                ),
+              ).then((value) => Navigator.pop(context));
             },
             child: const Text('Create Personalized Plan'),
           ),
