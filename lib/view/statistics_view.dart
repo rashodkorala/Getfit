@@ -48,6 +48,8 @@ class _StatisticsViewState extends State<StatisticsView> {
         child: Column(
           children: [
             if (_userStatistics != null) ...[
+              const Text('Body Measurements:\n '),
+              //Text('Date: ${_userStatistics!.timestamp}'),
               Text('Chest: ${_userStatistics!.chest} inches'),
               Text('Waist: ${_userStatistics!.waist} inches'),
               Text('Hips: ${_userStatistics!.hips} inches'),

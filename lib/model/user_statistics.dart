@@ -40,6 +40,8 @@ class UserStatistics {
       timestamp: data['timestamp']?.toDate(),
     );
   }
+
+  get date => null;
 }
 
 class WorkoutCompleted {
