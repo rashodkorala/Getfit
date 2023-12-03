@@ -22,9 +22,9 @@ class workoutExercise extends Exercise {
       'equipment': equipment,
       'gifUrl': gifUrl,
       'id': id,
-      'instructions': instructions.map((e) => '').toList(),
+      'instructions': instructions,
       'name': name,
-      'secondaryMuscles': secondaryMuscles.map((e) => '').toList(),
+      'secondaryMuscles': secondaryMuscles,
       'target': target,
       'sets': sets.map((e) => e.toMap()).toList(),
     };
