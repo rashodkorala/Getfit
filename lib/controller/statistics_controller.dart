@@ -1,8 +1,8 @@
-// controllers/statistics_controller.dart
-
+// Assuming this file is saved as statistics_controller.dart in the controllers directory
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getfit/model/user_statistics.dart';
+import 'package:getfit/model/workout_completed.dart';
 
 class StatisticsController {
   Future<UserStatistics?> fetchLatestUserStatistics() async {
@@ -21,5 +21,24 @@ class StatisticsController {
       }
     }
     return null;
+  }
+
+  Future<List<WorkoutCompleted>> fetchLatestWorkouts() async {
+    final user = FirebaseAuth.instance.currentUser;
+    List<WorkoutCompleted> workouts = [];
+
+    if (user != null) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('profiles')
+          .doc(user.uid)
+          .collection('workoutcompleted')
+          .orderBy('timestamp', descending: true)
+          .get();
+
+      workouts = snapshot.docs
+          .map((doc) => WorkoutCompleted.fromFirestore(doc.data()))
+          .toList();
+    }
+    return workouts;
   }
 }

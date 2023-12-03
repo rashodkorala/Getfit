@@ -1,8 +1,8 @@
-// views/statistics_view.dart
-
+// Assuming this file is saved as statistics_view.dart in the views directory
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/statistics_controller.dart';
 import 'package:getfit/model/user_statistics.dart';
+import 'package:getfit/model/workout_completed.dart';
 
 class StatisticsView extends StatefulWidget {
   @override
@@ -10,7 +10,9 @@ class StatisticsView extends StatefulWidget {
 }
 
 class _StatisticsViewState extends State<StatisticsView> {
+  final StatisticsController _controller = StatisticsController();
   UserStatistics? _userStatistics;
+  List<WorkoutCompleted>? _workouts;
   bool _isLoading = true;
 
   @override
@@ -20,49 +22,47 @@ class _StatisticsViewState extends State<StatisticsView> {
   }
 
   Future<void> _loadData() async {
-    final stats = await StatisticsController().fetchLatestUserStatistics();
+    final stats = await _controller.fetchLatestUserStatistics();
+    final workouts = await _controller.fetchLatestWorkouts();
     setState(() {
       _userStatistics = stats;
+      _workouts = workouts;
       _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Your Statistics'),
-        ),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Statistics'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            if (_userStatistics != null) ...[
-              const Text('Body Measurements:\n '),
-              //Text('Date: ${_userStatistics!.timestamp}'),
-              Text('Chest: ${_userStatistics!.chest} inches'),
-              Text('Waist: ${_userStatistics!.waist} inches'),
-              Text('Hips: ${_userStatistics!.hips} inches'),
-              Text('Arm: ${_userStatistics!.arm} inches'),
-              Text('Thigh: ${_userStatistics!.thigh} inches'),
-              Text('Calf: ${_userStatistics!.calf} inches'),
-              // Display other measurements as needed
-            ] else ...[
-              Text('No measurements found.')
-            ],
-          ],
-        ),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_userStatistics != null) ...[
+                    const Text('Latest Measurements:'),
+                    Text('Chest: ${_userStatistics!.chest} inches'),
+                    Text('Waist: ${_userStatistics!.waist} inches'),
+                    Text('Hips: ${_userStatistics!.hips} inches'),
+                    Text('Arm: ${_userStatistics!.arm} inches'),
+                    Text('Thigh: ${_userStatistics!.thigh} inches'),
+                    Text('Calf: ${_userStatistics!.calf} inches'),
+                  ],
+                  if (_workouts != null && _workouts!.isNotEmpty) ...[
+                    const Text('Latest Workout:'),
+                    for (var workout in _workouts!) ...[
+                      Text('Name: ${workout.name}'),
+                      Text('Weight: ${workout.weight} lbs'),
+                      Text('Reps: ${workout.reps}'),
+                    ],
+                  ],
+                ],
+              ),
+            ),
     );
   }
 }

@@ -43,27 +43,3 @@ class UserStatistics {
 
   get date => null;
 }
-
-class WorkoutCompleted {
-  final String name;
-  final double weight;
-  final int reps;
-  final DateTime timestamp;
-
-  WorkoutCompleted({
-    required this.name,
-    required this.weight,
-    required this.reps,
-    required this.timestamp,
-  });
-
-  // Factory method to create a WorkoutCompleted from Firestore data
-  factory WorkoutCompleted.fromFirestore(Map<String, dynamic> data) {
-    return WorkoutCompleted(
-      name: data['name'],
-      weight: data['weight'],
-      reps: data['reps'],
-      timestamp: data['timestamp'].toDate(),
-    );
-  }
-}
