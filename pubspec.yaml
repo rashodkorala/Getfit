@@ -7,18 +7,17 @@ environment:
   sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^4.13.3
-  firebase_auth: ^4.15.0
-  firebase_core: ^2.22.0
-  firebase_storage: ^11.5.3
+  firebase_auth: ^4.14.1
+  firebase_core: ^2.23.0
+  firebase_ui_auth: ^1.10.0
   flutter:
     sdk: flutter
-  image_picker: ^1.0.4
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
