@@ -1,20 +1,17 @@
 // views/statistics_view.dart
+
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/statistics_controller.dart';
 import 'package:getfit/model/user_statistics.dart';
-//import 'package:getfit/model/workout_completed.dart';
 
 class StatisticsView extends StatefulWidget {
-  const StatisticsView({super.key});
-
   @override
   _StatisticsViewState createState() => _StatisticsViewState();
 }
 
 class _StatisticsViewState extends State<StatisticsView> {
-  final StatisticsController _controller = StatisticsController();
   UserStatistics? _userStatistics;
-  List<WorkoutCompleted>? _workouts;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -23,32 +20,47 @@ class _StatisticsViewState extends State<StatisticsView> {
   }
 
   Future<void> _loadData() async {
-    final stats = await _controller.fetchLatestUserStatistics();
-    final workouts = await _controller.fetchLatestWorkouts();
+    final stats = await StatisticsController().fetchLatestUserStatistics();
     setState(() {
       _userStatistics = stats;
-      _workouts = workouts;
+      _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Your Statistics'),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Statistics'),
+        title: Text('Your Statistics'),
       ),
-      body: _userStatistics == null || _workouts == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Text('Body Measurements:'),
-                  // Display user statistics here
-                  Text('BMI: ${_userStatistics?.bmi?.toStringAsFixed(2)}'),
-                  // Display workout details here
-                ],
-              ),
-            ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (_userStatistics != null) ...[
+              Text('Chest: ${_userStatistics!.chest} inches'),
+              Text('Waist: ${_userStatistics!.waist} inches'),
+              Text('Hips: ${_userStatistics!.hips} inches'),
+              Text('Arm: ${_userStatistics!.arm} inches'),
+              Text('Thigh: ${_userStatistics!.thigh} inches'),
+              Text('Calf: ${_userStatistics!.calf} inches'),
+              // Display other measurements as needed
+            ] else ...[
+              Text('No measurements found.')
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
