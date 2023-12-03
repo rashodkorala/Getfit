@@ -25,9 +25,9 @@ class Exercise {
       'equipment': equipment,
       'gifUrl': gifUrl,
       'id': id,
-      'instructions': instructions.map((e) => null).toList(),
+      'instructions': instructions.map((e) => '').toList(),
       'name': name,
-      'secondaryMuscles': secondaryMuscles.map((e) => null).toList(),
+      'secondaryMuscles': secondaryMuscles.map((e) => '').toList(),
       'target': target,
     };
   }
