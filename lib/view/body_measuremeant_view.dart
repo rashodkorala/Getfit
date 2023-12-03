@@ -21,25 +21,25 @@ class _BodyMeasurementViewState extends State<BodyMeasurementView> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && !user.isAnonymous) {
       final measurements = {
-        for (var entry in _controllers.entries) entry.key: entry.value.text,
-        'timestamp': FieldValue
-            .serverTimestamp(), // Add a timestamp, will be used to pull latest data
+        for (var entry in _controllers.entries)
+          entry.key: double.tryParse(entry.value.text) ?? 0.0,
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
       await FirebaseFirestore.instance
           .collection('profiles')
           .doc(user.uid)
           .collection('measurements')
-          .add(measurements); // Save the measurements with a timestamp
+          .add(measurements);
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Measurements saved successfully!')));
 
       // Navigate back to the HomePage
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pop();
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('You are not logged in.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('You are not logged in.')));
     }
   }
 
@@ -47,10 +47,10 @@ class _BodyMeasurementViewState extends State<BodyMeasurementView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Input Body Measurements'),
+        title: const Text('Input Body Measurements'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,18 +59,19 @@ class _BodyMeasurementViewState extends State<BodyMeasurementView> {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: TextFormField(
                   controller: entry.value,
-                  keyboardType: TextInputType.number,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     labelText:
                         '${entry.key[0].toUpperCase()}${entry.key.substring(1)} (inches)',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                 ),
               ),
             Center(
               child: ElevatedButton(
                 onPressed: saveMeasurements,
-                child: Text('Save Measurements'),
+                child: const Text('Save Measurements'),
               ),
             ),
           ],
