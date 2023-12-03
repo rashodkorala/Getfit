@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/view/image_diary_add.dart'; // Import your ImageDiaryScreen
+import 'package:getfit/view/image_diary_view.dart';
 
 void main() {
   runApp(const MainApp());
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddImageScreen()),
+              MaterialPageRoute(builder: (context) => ImageDiaryView()),
             );
           },
           child: Text('Open Image Diary'),
