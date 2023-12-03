@@ -1,6 +1,10 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:getfit/view/WorkoutListView.dart';
+import 'package:getfit/view/prebuiltWorkoutplans_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'view/login_view.dart';
 import 'view/sign_up_view.dart';
@@ -38,22 +42,24 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Get Fit',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.blue,
       ),
       darkTheme: ThemeData.dark(),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: widget.isLoggedIn
           ? HomePage(currentUser: FirebaseAuth.instance.currentUser)
           : LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          setState(() {
-            _isDarkMode = value;
-          });
-        },
-      ),
+              onDarkModeChanged: (value) {
+                setState(() {
+                  _isDarkMode = value;
+                });
+              },
+            ),
       routes: {
         '/signup': (context) => SignUpView(),
         '/forgotpassword': (context) => ForgotPasswordView(),
+        '/viewworkout': (context) => WorkoutListView(),
+        '/prebuiltworkout': (context) => ChoosePrebuiltWorkoutPage(),
       },
     );
   }
