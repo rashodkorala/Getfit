@@ -29,6 +29,13 @@
             {
               "client_id": "722960252437-im23e8tfkrrij9gee8ehkv4l052r5ts3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "722960252437-4ec8k8fketpoinng253v6vmautlito99.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.getfit.RunnerTests"
+              }
             }
           ]
         }
