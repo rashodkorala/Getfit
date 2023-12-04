@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Get Fit',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       darkTheme: ThemeData.dark(),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,

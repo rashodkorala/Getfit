@@ -162,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text('Settings'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
