@@ -1,3 +1,5 @@
+// js function that works with firebase cloud functions 
+// to send scheduled notifications to users
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();

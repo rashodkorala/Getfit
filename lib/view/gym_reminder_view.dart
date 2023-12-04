@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// view that lets the user set gym reminders with date and time which are then stored in firebase
 class GymReminderView extends StatefulWidget {
   @override
   _GymReminderViewState createState() => _GymReminderViewState();
