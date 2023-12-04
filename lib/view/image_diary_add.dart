@@ -31,22 +31,24 @@ class _AddImageScreenState extends State<AddImageScreen> {
             decoration: InputDecoration(hintText: 'Enter a caption'),
           ),
           ElevatedButton(
-            onPressed: () => _getImage(),
-            child: Text('Pick Image'),
+            onPressed: () => _pickImage(ImageSource.gallery),
+            child: Text('Pick Image from Gallery'),
+          ),
+          ElevatedButton(
+            onPressed: () => _pickImage(ImageSource.camera),
+            child: Text('Take a Picture'),
           ),
           ElevatedButton(
             onPressed: () => _uploadImage(),
-            child: Text('Submit'),
+            child: Text('Add Image to Journal'),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _getImage() async {
-    final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery, // or ImageSource.camera for camera
-    );
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
     setState(() {
       if (pickedFile != null) {
         _image = pickedFile;

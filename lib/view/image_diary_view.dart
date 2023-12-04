@@ -1,32 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'image_diary_add.dart'; // Replace with your actual path
 
 class ImageDiaryView extends StatefulWidget {
-  final User? currentUser;
-
-  ImageDiaryView({Key? key, this.currentUser}) : super(key: key);
-
   @override
-  _ImageDiaryViewState createState() => _ImageDiaryViewState(currentUser);
+  _ImageDiaryViewState createState() => _ImageDiaryViewState();
 }
 
 class _ImageDiaryViewState extends State<ImageDiaryView> {
-  final User? currentUser;
-
-  _ImageDiaryViewState(this.currentUser);
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Image Diary'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () async {
+              DateTime? selectedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime.now(),
+              );
+              if (selectedDate != null) {
+                // Logic to scroll to the selected date's images
+              }
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('user_images')
-            .doc(currentUser!.uid)
-            .collection('images')
             .orderBy('uploadDate', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -40,21 +49,37 @@ class _ImageDiaryViewState extends State<ImageDiaryView> {
 
           var imageEntries = snapshot.data!.docs;
 
-          return ListView.builder(
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+            ),
             itemCount: imageEntries.length,
             itemBuilder: (context, index) {
               var entry = imageEntries[index].data() as Map<String, dynamic>;
-              return ListTile(
-                leading: Image.network(entry['imageUrl'],
-                    width: 100, height: 100, fit: BoxFit.cover),
-                title: Text(entry['caption']),
-                subtitle: Text((entry['uploadDate'] as Timestamp)
-                    .toDate()
-                    .toIso8601String()),
+              return GridTile(
+                child: Image.network(entry['imageUrl'], fit: BoxFit.cover),
+                footer: GridTileBar(
+                  backgroundColor: Colors.black45,
+                  title: Text(entry['caption']),
+                  subtitle: Text(DateFormat.yMMMd()
+                      .format((entry['uploadDate'] as Timestamp).toDate())),
+                ),
               );
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AddImageScreen()),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add Photo',
       ),
     );
   }
