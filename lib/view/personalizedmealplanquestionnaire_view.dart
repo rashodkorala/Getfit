@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/chatGPTService.dart';
 import 'generatedMealPlan_view.dart';
 
+// view for the meal plan questionaire
 class PersonalizedMealPlanQuestionnairePage extends StatefulWidget {
   @override
   _PersonalizedMealPlanQuestionnairePageState createState() =>
@@ -21,10 +22,11 @@ class _PersonalizedMealPlanQuestionnairePageState
     'What is your weight goal?',
     'How many meals do you prefer per day?',
     'Do you have any food allergies?',
+    'How many meal plans do you want?',
   ];
 
   List<TextEditingController> questionControllers = List.generate(
-    8,
+    9,
     (index) => TextEditingController(),
   );
 
@@ -94,7 +96,7 @@ class _PersonalizedMealPlanQuestionnairePageState
 
     // Create the prompt for the OpenAI API
     String prompt =
-        "Please create a personalized meal plan with the following details:\n" +
+        "Please create a personalized meal plan with the following details:, make the response easy to read, if there are multiple meal plans make the different titles bold for easier view and underline them\n" +
             userInputs.entries.map((e) => "- ${e.key}: ${e.value}").join('\n');
 
     try {

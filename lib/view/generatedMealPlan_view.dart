@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 
+// view that shows the meal plan generated
 class MealPlanScreen extends StatelessWidget {
   final String mealPlan;
 
