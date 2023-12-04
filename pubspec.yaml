@@ -10,7 +10,6 @@ dependencies:
   chat_gpt_sdk: ^2.2.5
   cloud_firestore: ^4.13.3
   dash_chat_2: ^0.0.19
-  dialog_flowtter: ^0.2.0-nullsafety.0
   firebase_auth: ^4.14.1
   firebase_core: ^2.23.0
   firebase_messaging: ^14.7.6
