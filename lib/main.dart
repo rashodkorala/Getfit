@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'view/add_meal.dart';
+import 'view/view_meal.dart';
 
 void main() {
   runApp(const MainApp());
@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
           child: ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AddMealScreen()),
+                MaterialPageRoute(builder: (context) => ViewMealScreen()),
               );
             },
             child: Text('Add Meal'),
