@@ -9,7 +9,7 @@ import 'package:getfit/view/water_intake_page.dart';
 import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
 import 'package:getfit/view/WorkoutListView.dart';
 import 'package:getfit/view/statistics_view.dart';
-import 'package:getfit/view/body_measuremeant_view.dart';
+import 'package:getfit/view/view_meal.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
     _pages = [
       WorkoutListView(),
-      //FoodIntakePage(),
+      ViewMealScreen(),
       WaterIntakePage(),
       PersonalizedMealPlanQuestionnairePage(),
     ];
@@ -103,7 +103,6 @@ class _HomePageState extends State<HomePage> {
   late List<Widget> _pages;
 
 
-
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -119,6 +118,13 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => WaterIntakePage()),
+        );
+      }
+
+      if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ViewMealScreen()),
         );
       }
 

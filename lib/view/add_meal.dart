@@ -4,9 +4,9 @@ import '../model/meal_firestore_model.dart';
 import '../controller/meal_firestore_controller.dart'; // Adjust this import based on your file structure
 
 class AddMealScreen extends StatefulWidget {
-  final String userId;
 
-  AddMealScreen({Key? key, required this.userId}) : super(key: key);
+
+  AddMealScreen({Key? key}) : super(key: key);
 
   @override
   _AddMealScreenState createState() => _AddMealScreenState();
@@ -108,7 +108,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
         rating: 0, // Default rating or implement a way to capture this
       );
 
-      FirestoreMealEntryService(userId: widget.userId)
+      FirestoreMealEntryService()
           .addMealEntry(newMealEntry)
           .then((result) {
         ScaffoldMessenger.of(context)

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../model/meal_firestore_model.dart';
-import 'add_meal.dart'; // Adjust the import according to your file structure
+import 'add_meal.dart';
 
 class ViewMealScreen extends StatefulWidget {
-  final String userId;
 
-  ViewMealScreen({Key? key, required this.userId}) : super(key: key);
+
+  ViewMealScreen({Key? key}) : super(key: key);
 
   @override
   _ViewMealScreenState createState() => _ViewMealScreenState();
@@ -21,7 +21,7 @@ class _ViewMealScreenState extends State<ViewMealScreen> {
     super.initState();
     mealEntriesCollection = FirebaseFirestore.instance
         .collection('meal_entries')
-        .doc(widget.userId)
+        .doc()
         .collection('userMealEntries');
   }
 
@@ -50,7 +50,7 @@ class _ViewMealScreenState extends State<ViewMealScreen> {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               MealEntry meal = MealEntry.fromMap(
-                  snapshot.data!.docs[index].data() as Map<String, dynamic>);
+                  snapshot.data!.docs[index].data() as DocumentSnapshot<Object?>);
               return Card(
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 child: Padding(
@@ -87,7 +87,7 @@ class _ViewMealScreenState extends State<ViewMealScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AddMealScreen(userId: widget.userId)),
+                builder: (context) => AddMealScreen()),
           );
         },
         tooltip: 'Add Meal',
