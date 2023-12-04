@@ -3,7 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
@@ -14,6 +14,16 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
+/// 
+
+
+//saves notification setting to user
+void saveReminderPreferences(String userId, Map<String, bool> days) {
+  FirebaseFirestore.instance.collection('users').doc(userId).update({
+    'reminderDays': days,
+  });
+}
+
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
