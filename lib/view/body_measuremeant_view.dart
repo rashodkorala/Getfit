@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+//view for inputing body measurements
+//inputs are stored in firebase collection measurements
 class BodyMeasurementView extends StatefulWidget {
+  const BodyMeasurementView({super.key});
+
   @override
   _BodyMeasurementViewState createState() => _BodyMeasurementViewState();
 }
@@ -33,7 +37,7 @@ class _BodyMeasurementViewState extends State<BodyMeasurementView> {
           .add(measurements);
 
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Measurements saved successfully!')));
+          const SnackBar(content: Text('Measurements saved successfully!')));
 
       // Navigate back to the HomePage
       Navigator.of(context).pop();
