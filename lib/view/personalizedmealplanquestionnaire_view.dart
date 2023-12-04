@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/chatGPTService.dart';
 import 'generatedMealPlan_view.dart';
 
+// view for the meal plan questionaire
 class PersonalizedMealPlanQuestionnairePage extends StatefulWidget {
   @override
   _PersonalizedMealPlanQuestionnairePageState createState() =>
