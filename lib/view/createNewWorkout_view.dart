@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/prebuiltWorkoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
@@ -80,7 +78,6 @@ class _CreateIndividualWorkoutPageState
 
     try {
       if (widget.isEditing == true) {
-        // Update existing workout
         print('Workout ID: ${widget.workout?.id}');
 
         await _workoutService.updateWorkout(widget.workout!.id, newWorkout);
@@ -88,7 +85,6 @@ class _CreateIndividualWorkoutPageState
           const SnackBar(content: Text('Workout updated successfully!')),
         );
       } else {
-        // Save new workout
         if (widget.destination == 'prebuilt') {
           await _prebuiltWorkoutService.addPrebuiltWorkout(newWorkout);
         } else {
@@ -157,18 +153,16 @@ class _CreateIndividualWorkoutPageState
                   backgroundColor: ThemeData().colorScheme.primary,
                   foregroundColor: ThemeData().colorScheme.onSecondary,
                 ),
-                // ignore: prefer_const_constructors
                 child: Row(
                   mainAxisSize: MainAxisSize
-                      .min, // To keep the row size just as big as its children
+                      .min,
                   children: const [
-                    // Spacing between icon and text
                     Text('Add Exercise'),
                     SizedBox(width: 8),
                     Icon(
                       Icons.add,
                       size: 20,
-                    ), // Replace with your desired icon
+                    ),
                   ],
                 ),
               ),
@@ -193,7 +187,6 @@ class _CreateIndividualWorkoutPageState
   }
 
   void _addExercise() {
-    // Existing logic to add an exercise
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -209,7 +202,6 @@ class _CreateIndividualWorkoutPageState
                 return ListTile(
                   title: Text(exercise.name),
                   onTap: () {
-                    // Add the selected exercise to the list of selected exercises
                     setState(() {
                       selectedExercises.add(
                         workoutExercise(
@@ -225,7 +217,6 @@ class _CreateIndividualWorkoutPageState
                         ),
                       );
                     });
-                    // Close the dialog
                     Navigator.pop(context);
                   },
                 );
@@ -269,7 +260,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // margin: const EdgeInsets.all(2.0),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -286,8 +276,8 @@ class _ExerciseTileState extends State<ExerciseTile> {
                       fontWeight: FontWeight.w500,
                     ),
                     overflow: TextOverflow
-                        .visible, // Allow text to wrap to the next line
-                    softWrap: true, // Enable text wrapping
+                        .visible,
+                    softWrap: true,
                   ),
                 ),
                 IconButton(
@@ -346,7 +336,6 @@ class _ExerciseTileState extends State<ExerciseTile> {
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
                           onChanged: (value) => setState(() {
-                            //handle error
                             widget.exercise.sets[index].weight =
                                 value.isEmpty ? 0 : int.parse(value);
                           }),

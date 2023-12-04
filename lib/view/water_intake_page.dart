@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 
 class WaterIntakePage extends StatefulWidget {
   @override
@@ -66,7 +65,7 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
           String docId = snapshot.docs.first.id;
           await firestore.collection('profiles').doc(uid).collection('waterIntake').doc(docId).delete();
           setState(() {
-            totalIntake = 0.0; // Reset the local intake to 0 after deletion
+            totalIntake = 0.0;
           });
         }
       }

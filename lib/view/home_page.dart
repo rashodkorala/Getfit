@@ -10,6 +10,7 @@ import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
 import 'package:getfit/view/WorkoutListView.dart';
 import 'package:getfit/view/statistics_view.dart';
 import 'package:getfit/view/view_meal.dart';
+import 'package:getfit/view/image_diary_view.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -54,6 +55,10 @@ class _HomePageState extends State<HomePage> {
         .push(MaterialPageRoute(builder: (context) => StatisticsView()));
   }
 
+  void navigateToImageDiaryView(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => ImageDiaryView()));
+  }
 
   void navigateToSettings(BuildContext context) async {
     final selectedPicture = await Navigator.push(
@@ -151,6 +156,12 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
+              navigateToImageDiaryView(context);
+            },
+            icon: Icon(Icons.camera_alt),
+          ),
+          IconButton(
+            onPressed: () {
               navigateToStatistics(context);
             },
             icon: Icon(Icons.query_stats_outlined),
@@ -214,9 +225,8 @@ class _HomePageState extends State<HomePage> {
                   _buildInfoBox('TDEE', '${userProfile?['tdee']?.toString() ?? 'N/A'} Calories'),
                 ],
               ),
-              // Add other fields as needed
             ],
-            Spacer(), // To push the chat button to the bottom
+            Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: Row(

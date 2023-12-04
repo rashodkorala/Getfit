@@ -1,11 +1,6 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-
 import 'dart:async';
-
 import 'package:getfit/model/workout_model.dart';
-
 import '../controller/workoutTrackerService.dart';
 import '../model/workoutExercise_model.dart';
 import 'workoutHistory_view.dart';
@@ -56,14 +51,10 @@ class _WorkoutTrackerViewState extends State<WorkoutTrackerView> {
   }
 
   void _finishWorkout() async {
-    // Filter out only completed sets for each exercise
-
-    // Calculate the duration of the workout
     var duration = _formatDuration(_duration);
     widget.workout.duration = duration;
 
     widget.workout.lastperformed = DateTime.now().toString();
-    // Update the workout in the database
     try {
       await workoutcompletedService.addWorkout(widget.workout);
     } catch (e) {
@@ -216,7 +207,7 @@ class _ExerciseTileState extends State<ExerciseTile> {
                     Text('Reps'),
                     Text(''),
                     SizedBox
-                        .shrink(), // Placeholder for the remove button column
+                        .shrink(),
                   ],
                 ),
                 ...List.generate(widget.exercise.sets.length, (index) {

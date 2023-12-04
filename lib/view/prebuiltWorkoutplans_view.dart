@@ -17,7 +17,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
   @override
   void initState() {
     super.initState();
-    // Data fetching can be initiated here if needed
   }
 
   @override
@@ -30,7 +29,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
             icon: const Icon(Icons.add),
             tooltip: 'Add new workout plan',
             onPressed: () {
-              // Navigate to the CreateIndividualWorkoutPage when the user taps the button
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -61,7 +59,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
                   subtitle:
                       Text('Created on: ${formatDate(workout.creationDate)}'),
                   onTap: () {
-                    // Navigate to the CreateIndividualWorkoutPage when the ListTile is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -81,7 +78,6 @@ class _ChoosePrebuiltWorkoutPageState extends State<ChoosePrebuiltWorkoutPage> {
   }
 
   String formatDate(DateTime date) {
-    // Customize the date format as needed
     return '${date.year}-${date.month}-${date.day}';
   }
 }

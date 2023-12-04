@@ -40,7 +40,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (snapshot.exists) {
       setState(() {
-        //genderController.text = snapshot.data()?['gender'] ?? '';
         nameController.text = snapshot.data()?['name']?.toString() ?? '';
         ageController.text = snapshot.data()?['age']?.toString() ?? '';
         weightController.text = snapshot.data()?['weight']?.toString() ?? '';
@@ -96,8 +95,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ? 'assets/default_profile_image.png'
       : '';
     String description = descriptionController.text;
-
-
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 

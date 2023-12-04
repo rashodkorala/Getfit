@@ -1,7 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
-
 import 'package:flutter/material.dart';
-
 import 'generatedWorkout_view.dart';
 
 class WorkoutGeneratorQnA extends StatefulWidget {
@@ -62,7 +59,6 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
           });
         },
         onStepCancel: () {
-          // Move to the previous step
           setState(() {
             if (currentStep > 0) {
               currentStep -= 1;
@@ -191,7 +187,6 @@ class WorkoutGeneratorQnAState extends State<WorkoutGeneratorQnA> {
         "I have a user who needs a personalized workout plan. Here are their details:\n";
 
     userAnswers.forEach((question, answer) {
-      // Format each question-answer pair into a readable sentence
       String formattedQuestion = question.replaceAll('?', '');
       prompt += "- ${formattedQuestion}: ${answer}.\n";
     });

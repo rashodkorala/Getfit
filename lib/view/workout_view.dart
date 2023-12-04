@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, unnecessary_string_interpolations, use_key_in_widget_constructors, must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/workoutService.dart';
 import 'package:getfit/model/workoutExercise_model.dart';
@@ -71,7 +69,6 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                 style: TextStyle(color: Colors.grey[600])),
             const SizedBox(height: 16),
             Expanded(
-              // Makes sure the ListView only occupies the available space
               child: ListView.builder(
                 itemCount: workout.exercises.length,
                 itemBuilder: (context, index) {
@@ -107,8 +104,8 @@ class ViewWorkoutPlanPage extends StatelessWidget {
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.bold),
                     overflow: TextOverflow
-                        .visible, // Allow text to wrap to the next line
-                    softWrap: true, // Enable text wrapping
+                        .visible,
+                    softWrap: true,
                   ),
                 ),
                 IconButton(
@@ -192,7 +189,6 @@ class ViewWorkoutPlanPage extends StatelessWidget {
 
   Widget _startWorkoutButton(BuildContext context) {
     return Center(
-      // Wrap the ElevatedButton with a Center widget
       child: ElevatedButton(
         onPressed: () {
           Navigator.push(

@@ -16,7 +16,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Check if the user is already logged in
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userUID = prefs.getString('userUID');
 

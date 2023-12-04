@@ -15,12 +15,11 @@ class AddMealScreen extends StatefulWidget {
 class _AddMealScreenState extends State<AddMealScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Form field variables
   String _name = '';
   String _description = '';
   String _calories = '';
   DateTime _selectedDate = DateTime.now();
-  String _mealType = 'Breakfast'; // Default value
+  String _mealType = 'Breakfast';
   final List<String> mealTypes = ['Snack', 'Breakfast', 'Lunch', 'Dinner'];
 
   @override
@@ -99,13 +98,13 @@ class _AddMealScreenState extends State<AddMealScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       MealEntry newMealEntry = MealEntry(
-        id: '', // Firestore will generate the ID
+        id: '',
         meal_name: _name,
         meal_description: _description,
         meal_calories: _calories,
         meal_type: _mealType,
         meal_date: DateFormat.yMd().format(_selectedDate),
-        rating: 0, // Default rating or implement a way to capture this
+        rating: 0,
       );
 
       FirestoreMealEntryService()
@@ -114,7 +113,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Meal Added Successfully')));
         Navigator.pop(
-            context); // Optional: Return to the previous screen after submission
+            context);
       }).catchError((error) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Error adding meal')));

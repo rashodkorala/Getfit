@@ -35,7 +35,6 @@ class _StatisticsViewState extends State<StatisticsView> {
         .push(MaterialPageRoute(builder: (context) => BodyMeasurementView()));
   }
 
-//display the data in a table
   DataTable buildMeasurementsTable(UserStatistics stats) {
     return DataTable(
       columns: const [

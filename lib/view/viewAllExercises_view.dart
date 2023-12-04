@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:getfit/view/Exercise_view.dart';
-
 import '../controller/exerciesService.dart';
 import '../model/exercise_model.dart';
 
@@ -44,16 +43,6 @@ class _ExercisesPageState extends State<ViewAllExercises> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to the page for adding a new exercise
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => CreateExercisePage(),
-          //   ),
-          // ).then((value) {
-          //   // Refresh the list of exercises when returning from the add exercise page
-          //   setState(() {});
-          // });
         },
         child: Icon(Icons.add),
       ),

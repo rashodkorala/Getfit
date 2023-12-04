@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
@@ -104,7 +103,6 @@ class WorkoutPlanDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The workoutPlan is expected to be in Markdown format
     return Markdown(
       data: workoutPlan,
       padding: const EdgeInsets.all(16),

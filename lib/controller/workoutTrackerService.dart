@@ -46,8 +46,7 @@ class WorkoutTrackerService extends WorkoutService {
       }
     } catch (e) {
       print('Error adding workout to Firestore: $e');
-      // Handle the error as needed
-      rethrow; // Re-throw the exception for the calling code to handle
+      rethrow;
     }
   }
 
@@ -64,7 +63,6 @@ class WorkoutTrackerService extends WorkoutService {
       }
     } catch (e) {
       print('Error updating workout in Firestore: $e');
-      // Handle the error as needed
       rethrow;
     }
   }
@@ -80,7 +78,6 @@ class WorkoutTrackerService extends WorkoutService {
       }
     } catch (e) {
       print('Error deleting workout in Firestore: $e');
-      // Handle the error as needed
       rethrow;
     }
   }

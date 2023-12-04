@@ -6,7 +6,6 @@ import 'add_meal.dart';
 
 class ViewMealScreen extends StatefulWidget {
 
-
   ViewMealScreen({Key? key}) : super(key: key);
 
   @override

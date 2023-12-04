@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'image_diary_add.dart'; // Replace with your actual path
+import 'image_diary_add.dart';
 
 class ImageDiaryView extends StatefulWidget {
   @override
@@ -27,7 +27,6 @@ class _ImageDiaryViewState extends State<ImageDiaryView> {
                 lastDate: DateTime.now(),
               );
               if (selectedDate != null) {
-                // Logic to scroll to the selected date's images
               }
             },
           ),

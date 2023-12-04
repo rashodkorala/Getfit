@@ -28,7 +28,7 @@ class FirestoreImageEntryService {
 
   Future<void> updateImageEntry(UserImageEntry imageEntry) async {
     return await imageEntriesCollection
-        .doc(imageEntry.imageUrl) // Assuming imageUrl is unique and used as ID
+        .doc(imageEntry.imageUrl)
         .update(imageEntry.toMap());
   }
 

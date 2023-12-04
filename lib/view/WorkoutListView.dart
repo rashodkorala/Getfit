@@ -31,7 +31,6 @@ class _WorkoutListViewState extends State<WorkoutListView> {
         });
       }
     } catch (e) {
-      // Handle errors here, perhaps show a dialog or a snackbar
     }
   }
 
@@ -89,12 +88,12 @@ class _WorkoutListViewState extends State<WorkoutListView> {
                   child: Container(
                     margin: const EdgeInsets.all(12),
                     padding:
-                        const EdgeInsets.all(4), // Padding inside the container
+                        const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color:
-                          Colors.grey[200], // Background color of the container
+                          Colors.grey[200],
                       borderRadius:
-                          BorderRadius.circular(20), // Rounded corners
+                          BorderRadius.circular(20),
                       border:
                           Border.all(color: Colors.blue, width: 2), // Border
                       boxShadow: [
@@ -103,7 +102,7 @@ class _WorkoutListViewState extends State<WorkoutListView> {
                           spreadRadius: 2,
                           blurRadius: 4,
                           offset:
-                              const Offset(0, 3), // changes position of shadow
+                              const Offset(0, 3),
                         ),
                       ],
                     ),

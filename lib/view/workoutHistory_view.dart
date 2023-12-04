@@ -3,8 +3,6 @@ import 'package:getfit/controller/workoutTrackerService.dart';
 import 'package:getfit/view/workout_view.dart';
 import '../model/workout_model.dart';
 
-// import 'createWorkout_view.dart';
-
 class WorkoutHistoryListView extends StatefulWidget {
   const WorkoutHistoryListView({Key? key}) : super(key: key);
 
@@ -41,9 +39,7 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
                   title: Text(workout.name),
                   subtitle:
                       Text('Created on: ${formatDate(workout.creationDate)}'),
-                  // Add more details as needed
                   onTap: () {
-                    // Navigate to the ViewWorkoutPlanPage when the ListTile is tapped
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -61,27 +57,10 @@ class _WorkoutListViewState extends State<WorkoutHistoryListView> {
           }
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Navigate to the page for creating a new workout plan
-      //     showCreateWorkoutPlanBottomSheet(context);
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 
   String formatDate(DateTime date) {
-    // Customize the date format as needed
     return '${date.year}-${date.month}-${date.day}';
   }
 }
-
-// void showCreateWorkoutPlanBottomSheet(BuildContext context) {
-//   showModalBottomSheet(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return CreateWorkoutPlanBottomSheet();
-//     },
-//   );
-// }

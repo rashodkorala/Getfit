@@ -61,38 +61,35 @@ class _AddImageScreenState extends State<AddImageScreen> {
 
     final String userId = FirebaseAuth.instance.currentUser!.uid;
     final String fileName =
-        'user_images/$userId/${DateTime.now().millisecondsSinceEpoch}_${_image!.name}';
+        'user_images/$userId/${DateTime
+        .now()
+        .millisecondsSinceEpoch}_${_image!.name}';
     final File imageFile = File(_image!.path);
 
-    // Upload image to Firebase Storage
     try {
       await FirebaseStorage.instance.ref(fileName).putFile(imageFile);
       final imageUrl =
-          await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+      await FirebaseStorage.instance.ref(fileName).getDownloadURL();
 
-      // Save image URL and caption to Firestore
       await FirebaseFirestore.instance
-          .collection('user_images')
+          .collection('userImageEntries')
           .doc(userId)
-          .collection('images')
+          .collection('user_images')
           .add({
         'imageUrl': imageUrl,
         'caption': _captionController.text,
         'uploadDate': DateTime.now(),
       });
 
-      // Clear the current state
       setState(() {
         _image = null;
         _captionController.clear();
       });
 
-      // Show a success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Image uploaded successfully')),
       );
     } catch (e) {
-      // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error uploading image: $e')),
       );

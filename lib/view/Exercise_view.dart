@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../model/exercise_model.dart';
-// Import your Exercise model
 
 void showExerciseDialog(BuildContext context, Exercise exercise) {
   showDialog(
@@ -10,23 +8,23 @@ void showExerciseDialog(BuildContext context, Exercise exercise) {
       return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius:
-              BorderRadius.circular(20.0), // Rounded corners for the dialog
+              BorderRadius.circular(20.0),
         ),
         child: Container(
           padding: EdgeInsets.all(10.0),
           constraints:
-              BoxConstraints(maxHeight: 600), // Adjust the height as needed
+              BoxConstraints(maxHeight: 600),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 child: SizedBox(
-                  width: double.infinity, // Full width
-                  height: 300, // Fixed height
+                  width: double.infinity,
+                  height: 300,
                   child: Image.network(
                     exercise.gifUrl,
-                    fit: BoxFit.fill, // Adjust the fit as needed
+                    fit: BoxFit.fill,
                     gaplessPlayback: true,
                     loadingBuilder: (BuildContext context, Widget child,
                         ImageChunkEvent? loadingProgress) {

@@ -30,8 +30,7 @@ class prebuiltWorkoutService extends WorkoutService {
       await _prebuiltWorkoutsCollection().add(workout.toMap());
     } catch (e) {
       print('Error adding workout to Firestore: $e');
-      // Handle the error as needed
-      throw e; // Re-throw the exception for the calling code to handle
+      throw e;
     }
   }
 
@@ -43,8 +42,7 @@ class prebuiltWorkoutService extends WorkoutService {
           .update(updatedWorkout.toMap());
     } catch (e) {
       print('Error updating workout in Firestore: $e');
-      // Handle the error as needed
-      throw e; // Re-throw the exception for the calling code to handle
+      throw e;
     }
   }
 
@@ -53,8 +51,7 @@ class prebuiltWorkoutService extends WorkoutService {
       await _prebuiltWorkoutsCollection().doc(documentId).delete();
     } catch (e) {
       print('Error deleting workout from Firestore: $e');
-      // Handle the error as needed
-      throw e; // Re-throw the exception for the calling code to handle
+      throw e;
     }
   }
 }

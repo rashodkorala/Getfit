@@ -27,8 +27,7 @@ class ExcersiceService {
       await _exercisesCollection.add(exercise.toMap());
     } catch (e) {
       print('Error adding exercise to Firestore: $e');
-      // Handle the error as needed
-      throw e; // Re-throw the exception for the calling code to handle
+      throw e;
     }
   }
 
@@ -40,7 +39,6 @@ class ExcersiceService {
           .update(updatedExercise.toMap());
     } catch (e) {
       print('Error updating exercise in Firestore: $e');
-      // Handle the error as needed
       throw e;
     }
   }
@@ -50,7 +48,6 @@ class ExcersiceService {
       await _exercisesCollection.doc(documentId).delete();
     } catch (e) {
       print('Error deleting exercise in Firestore: $e');
-      // Handle the error as needed
       throw e;
     }
   }

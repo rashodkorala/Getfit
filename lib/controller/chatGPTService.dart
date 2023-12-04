@@ -4,7 +4,7 @@ import 'dart:convert';
 class ChatGPTService {
   Future<String> sendPromptToOpenAI(String prompt) async {
     final String apiKey =
-        "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"; // Replace with your actual API key
+        "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";
     final Uri url = Uri.parse(
         "https://api.openai.com/v1/engines/text-davinci-003/completions");
 
@@ -17,9 +17,8 @@ class ChatGPTService {
         },
         body: jsonEncode({
           'prompt': prompt,
-          'max_tokens': 3000, // Adjust the token limit as needed
-          'temperature': 0.7, // Adjust as needed
-          // Add other parameters if required
+          'max_tokens': 3000,
+          'temperature': 0.7,
         }),
       );
 

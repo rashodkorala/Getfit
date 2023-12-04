@@ -25,10 +25,6 @@ class _ChatPageState extends State<ChatPage> {
     enableLog: true,
   );
 
-
-
-  //final ChatUser _currentUser = ChatUser(id: '1',firstName: 'nick', lastName: 'collins' );
-
   final ChatUser _gptChatUser = ChatUser(id: '2',firstName: 'chat', lastName: 'GPT' );
 
   List<ChatMessage> _messages = <ChatMessage>[];

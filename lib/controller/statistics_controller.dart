@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getfit/model/user_statistics.dart';
 import 'package:getfit/model/workout_completed.dart';
 
-// fetch the latest user statistics
 class StatisticsController {
   Future<UserStatistics?> fetchLatestUserStatistics() async {
     final user = FirebaseAuth.instance.currentUser;

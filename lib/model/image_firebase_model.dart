@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UserImageEntry {
   final String imageUrl;
   final String caption;
   final DateTime date;
   final String
-      userId; // Optional, if you want to store which user uploaded the image
+      userId;
 
   UserImageEntry({
     required this.imageUrl,
@@ -18,7 +16,7 @@ class UserImageEntry {
     return {
       'imageUrl': imageUrl,
       'caption': caption,
-      'date': date.toIso8601String(), // Storing date as a string
+      'date': date.toIso8601String(),
       'userId': userId,
     };
   }
