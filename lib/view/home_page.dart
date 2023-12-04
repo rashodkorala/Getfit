@@ -8,6 +8,7 @@ import 'package:getfit/view/chatbot_screen.dart';
 import 'package:getfit/view/water_intake_page.dart';
 import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
 import 'package:getfit/view/WorkoutListView.dart';
+import 'package:getfit/view/statistics_view.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
@@ -45,6 +46,11 @@ class _HomePageState extends State<HomePage> {
         userProfile = snapshot.data();
       });
     }
+  }
+
+  void navigateToStatistics(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => StatisticsView()));
   }
 
 
@@ -138,10 +144,17 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             onPressed: () {
+              navigateToStatistics(context);
+            },
+            icon: Icon(Icons.query_stats_outlined),
+          ),
+          IconButton(
+            onPressed: () {
               logOut(context);
             },
             icon: Icon(Icons.logout),
           ),
+
         ],
       ),
       body: Padding(
