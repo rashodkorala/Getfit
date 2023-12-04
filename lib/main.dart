@@ -45,12 +45,12 @@ class _MyAppState extends State<MyApp> {
       home: widget.isLoggedIn
           ? HomePage(currentUser: FirebaseAuth.instance.currentUser)
           : LoginViewWithDarkModeSwitch(
-        onDarkModeChanged: (value) {
-          setState(() {
-            _isDarkMode = value;
-          });
-        },
-      ),
+              onDarkModeChanged: (value) {
+                setState(() {
+                  _isDarkMode = value;
+                });
+              },
+            ),
       routes: {
         '/signup': (context) => SignUpView(),
         '/forgotpassword': (context) => ForgotPasswordView(),
