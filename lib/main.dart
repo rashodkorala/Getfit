@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'view/view_meal.dart';
 
@@ -19,9 +20,13 @@ class MainApp extends StatelessWidget {
         body: Center(
           child: ElevatedButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ViewMealScreen()),
-              );
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => ViewMealScreen(userId: user.uid)),
+                );
+              }
             },
             child: Text('Add Meal'),
           ),

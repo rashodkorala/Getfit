@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../model/meal_firestore_model.dart';
-import '../controller/meal_firestore_controller.dart';
-
-/* THINGS TO FIX
- * Check ID generation
- * Check database connection with form submission
- * Check form validation
- * 
- */
+import '../controller/meal_firestore_controller.dart'; // Adjust this import based on your file structure
 
 class AddMealScreen extends StatefulWidget {
+  final String userId;
+
+  AddMealScreen({Key? key, required this.userId}) : super(key: key);
+
   @override
   _AddMealScreenState createState() => _AddMealScreenState();
 }
@@ -26,7 +23,6 @@ class _AddMealScreenState extends State<AddMealScreen> {
   String _mealType = 'Breakfast'; // Default value
   final List<String> mealTypes = ['Snack', 'Breakfast', 'Lunch', 'Dinner'];
 
-  // Creating the form widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,22 +35,17 @@ class _AddMealScreenState extends State<AddMealScreen> {
           padding: EdgeInsets.all(16.0),
           children: <Widget>[
             TextFormField(
-              // Meal name
               decoration: InputDecoration(labelText: 'Meal Name'),
               onSaved: (value) => _name = value!,
               validator: (value) =>
                   value!.isEmpty ? 'Please enter a name' : null,
             ),
-
-            // Meal description
             TextFormField(
               decoration: InputDecoration(labelText: 'Description'),
               onSaved: (value) => _description = value!,
               validator: (value) =>
                   value!.isEmpty ? 'Please enter a description' : null,
             ),
-
-            // Meal calories
             TextFormField(
               decoration: InputDecoration(labelText: 'Calories'),
               keyboardType: TextInputType.number,
@@ -62,8 +53,6 @@ class _AddMealScreenState extends State<AddMealScreen> {
               validator: (value) =>
                   value!.isEmpty ? 'Please enter calorie count' : null,
             ),
-
-            // Meal date
             ListTile(
               title:
                   Text('Meal Date: ${DateFormat.yMd().format(_selectedDate)}'),
@@ -82,8 +71,6 @@ class _AddMealScreenState extends State<AddMealScreen> {
                 }
               },
             ),
-
-            // Meal type
             DropdownButtonFormField(
               value: _mealType,
               items: mealTypes.map((String type) {
@@ -98,8 +85,6 @@ class _AddMealScreenState extends State<AddMealScreen> {
                 });
               },
             ),
-
-            // Submit button
             ElevatedButton(
               child: Text('Submit'),
               onPressed: _submitForm,
@@ -113,21 +98,26 @@ class _AddMealScreenState extends State<AddMealScreen> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Create a new MealEntry object
       MealEntry newMealEntry = MealEntry(
-        id: '', // Generate an ID or leave blank if Firestore generates it
+        id: '', // Firestore will generate the ID
         meal_name: _name,
         meal_description: _description,
         meal_calories: _calories,
         meal_type: _mealType,
         meal_date: DateFormat.yMd().format(_selectedDate),
-        rating: 0, // Or implement a way to capture rating
+        rating: 0, // Default rating or implement a way to capture this
       );
-      // Use FirestoreMealEntryService to add the new entry
-      FirestoreMealEntryService().addMealEntry(newMealEntry).then((result) {
-        // Handle success, perhaps pop the screen or show a success message
+
+      FirestoreMealEntryService(userId: widget.userId)
+          .addMealEntry(newMealEntry)
+          .then((result) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Meal Added Successfully')));
+        Navigator.pop(
+            context); // Optional: Return to the previous screen after submission
       }).catchError((error) {
-        // Handle error
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error adding meal')));
       });
     }
   }

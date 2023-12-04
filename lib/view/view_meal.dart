@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import '../model/meal_firestore_model.dart';
-import 'add_meal.dart';
+import 'add_meal.dart'; // Adjust the import according to your file structure
 
 class ViewMealScreen extends StatefulWidget {
+  final String userId;
+
+  ViewMealScreen({Key? key, required this.userId}) : super(key: key);
+
   @override
   _ViewMealScreenState createState() => _ViewMealScreenState();
 }
 
 class _ViewMealScreenState extends State<ViewMealScreen> {
-  final user = FirebaseAuth.instance.currentUser;
   late final CollectionReference mealEntriesCollection;
 
   @override
@@ -19,7 +21,7 @@ class _ViewMealScreenState extends State<ViewMealScreen> {
     super.initState();
     mealEntriesCollection = FirebaseFirestore.instance
         .collection('meal_entries')
-        .doc(user!.uid)
+        .doc(widget.userId)
         .collection('userMealEntries');
   }
 
@@ -47,7 +49,8 @@ class _ViewMealScreenState extends State<ViewMealScreen> {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              MealEntry meal = MealEntry.fromMap(snapshot.data!.docs[index]);
+              MealEntry meal = MealEntry.fromMap(
+                  snapshot.data!.docs[index].data() as Map<String, dynamic>);
               return Card(
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                 child: Padding(
@@ -83,7 +86,8 @@ class _ViewMealScreenState extends State<ViewMealScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddMealScreen()),
+            MaterialPageRoute(
+                builder: (context) => AddMealScreen(userId: widget.userId)),
           );
         },
         tooltip: 'Add Meal',

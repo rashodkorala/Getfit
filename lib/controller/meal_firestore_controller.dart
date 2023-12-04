@@ -4,14 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../model/meal_firestore_model.dart';
 
 class FirestoreMealEntryService {
-  final user = FirebaseAuth.instance.currentUser;
+  final String userId;
+  late final CollectionReference mealEntriesCollection;
 
-  final CollectionReference mealEntriesCollection;
-
-  FirestoreMealEntryService()
+  FirestoreMealEntryService({required this.userId})
       : mealEntriesCollection = FirebaseFirestore.instance
             .collection('meal_entries')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc(userId)
             .collection('userMealEntries');
 
   Future<DocumentReference<Object?>> addMealEntry(MealEntry mealEntry) async {
