@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getfit/controller/statistics_controller.dart';
 import 'package:getfit/model/user_statistics.dart';
 import 'package:getfit/model/workout_completed.dart';
+import 'package:getfit/view/body_measuremeant_view.dart';
 
 class StatisticsView extends StatefulWidget {
   @override
@@ -28,6 +29,10 @@ class _StatisticsViewState extends State<StatisticsView> {
       _workouts = workouts;
       _isLoading = false;
     });
+  }
+  void navigateToMeasurements(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => BodyMeasurementView()));
   }
 
 //display the data in a table
@@ -71,6 +76,14 @@ class _StatisticsViewState extends State<StatisticsView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Statistics'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              navigateToMeasurements(context);
+            },
+            icon: Icon(Icons.balance),
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

@@ -9,6 +9,7 @@ import 'package:getfit/view/water_intake_page.dart';
 import 'package:getfit/view/personalizedmealplanquestionnaire_view.dart';
 import 'package:getfit/view/WorkoutListView.dart';
 import 'package:getfit/view/statistics_view.dart';
+import 'package:getfit/view/body_measuremeant_view.dart';
 
 class HomePage extends StatefulWidget {
   final User? currentUser;
