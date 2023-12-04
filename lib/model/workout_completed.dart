@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//gets info from firebase
 class WorkoutCompleted {
   final String? name;
   final double? weight;

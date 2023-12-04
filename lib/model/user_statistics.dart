@@ -26,7 +26,7 @@ class UserStatistics {
       ? (weight! / ((height! / 100) * (height! / 100)))
       : null;
 
-  // Factory method to create a UserStatistics from Firestore data
+  //  method to create a UserStatistics from Firestore data
   factory UserStatistics.fromFirestore(Map<String, dynamic> data) {
     return UserStatistics(
       chest: data['chest'],

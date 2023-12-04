@@ -1,4 +1,3 @@
-// Assuming this file is saved as statistics_view.dart in the views directory
 import 'package:flutter/material.dart';
 import 'package:getfit/controller/statistics_controller.dart';
 import 'package:getfit/model/user_statistics.dart';
@@ -31,6 +30,42 @@ class _StatisticsViewState extends State<StatisticsView> {
     });
   }
 
+//display the data in a table
+  DataTable buildMeasurementsTable(UserStatistics stats) {
+    return DataTable(
+      columns: const [
+        DataColumn(label: Text('Measurement')),
+        DataColumn(label: Text('Value (inches)')),
+      ],
+      rows: [
+        DataRow(cells: [
+          const DataCell(Text('Chest')),
+          DataCell(Text('${stats.chest?.toStringAsFixed(2)}')),
+        ]),
+        DataRow(cells: [
+          const DataCell(Text('Waist')),
+          DataCell(Text('${stats.waist?.toStringAsFixed(2)}')),
+        ]),
+        DataRow(cells: [
+          const DataCell(Text('Hips')),
+          DataCell(Text('${stats.hips?.toStringAsFixed(2)}')),
+        ]),
+        DataRow(cells: [
+          const DataCell(Text('Arm')),
+          DataCell(Text('${stats.arm?.toStringAsFixed(2)}')),
+        ]),
+        DataRow(cells: [
+          const DataCell(Text('Thigh')),
+          DataCell(Text('${stats.thigh?.toStringAsFixed(2)}')),
+        ]),
+        DataRow(cells: [
+          const DataCell(Text('Calf')),
+          DataCell(Text('${stats.calf?.toStringAsFixed(2)}')),
+        ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,26 +73,31 @@ class _StatisticsViewState extends State<StatisticsView> {
         title: Text('Your Statistics'),
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (_userStatistics != null) ...[
-                    const Text('Latest Measurements:\n'),
-                    Text('Chest: ${_userStatistics!.chest} inches'),
-                    Text('Waist: ${_userStatistics!.waist} inches'),
-                    Text('Hips: ${_userStatistics!.hips} inches'),
-                    Text('Arm: ${_userStatistics!.arm} inches'),
-                    Text('Thigh: ${_userStatistics!.thigh} inches'),
-                    Text('Calf: ${_userStatistics!.calf} inches'),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text('Latest Measurements:',
+                          style: TextStyle(fontSize: 18)),
+                    ),
+                    buildMeasurementsTable(_userStatistics!),
                   ],
+                  const SizedBox(height: 20),
                   if (_workouts != null && _workouts!.isNotEmpty) ...[
-                    const Text('Latest Workout:\n'),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text('Latest Workout:',
+                          style: TextStyle(fontSize: 18)),
+                    ),
                     for (var workout in _workouts!) ...[
                       Text('Name: ${workout.name}'),
                       Text('Weight: ${workout.weight} lbs'),
                       Text('Reps: ${workout.reps}'),
+                      const SizedBox(height: 10),
                     ],
                   ],
                 ],
