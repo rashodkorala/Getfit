@@ -3,10 +3,9 @@ import 'dart:convert';
 
 class ChatGPTService {
   Future<String> sendPromptToOpenAI(String prompt) async {
-    final String apiKey =
-        "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";
+    final String apiKey = "YOUR_API_KEY";
     final Uri url = Uri.parse(
-        "https://api.openai.com/v1/engines/text-davinci-003/completions");
+        "https://api.openai.com/v1/engines/gpt-3.5-turbo-instruct/completions");
 
     try {
       final response = await http.post(
